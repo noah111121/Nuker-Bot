@@ -49,18 +49,18 @@ Old executables will no longer be available; only for the latest stable version.
 > !stop: **same as !pause in the way that it bans you, but it also removes the bot (see Notes section for when to use !pause or !stop).** <br>
 > !leave: **simply removes the bot from the server.** <br>
 
-> !volume (config_option: see below) (arguments): **customises the customisable nuke command !skip. Config options are 1-6 (you can also use * to select all options and supply True or False arguments to disable them) and accepted arguments are either "True" or "False" (case sensitive).**
-
-**There is an exception for config option 5 of the nuke channel where you can specify True of False as well as a name for the channel. Example: !volume 5 True "lemon-channel".**
-**There is also another exception for config option 4 where you can specify a name and the name of the icon (only URLs are supported; see below). Example: !volume 4 True "LEMON" "https://i.imgur.com/6GXC7Wc.jpg" (has a default value of https://i.imgur.com/CNdUGZjm.jpg)**
-**Note: only URLs are supported and they MUST point to a file with a JPG or PNG extension. GIF images are also supported IF THE SERVER HAS ENOUGH BOOSTS TO HAVE ANIMATED IMAGES.**
-Supported config options:
-1 = ban everyone
-2 = delete all channels
-3 = delete all roles
-4 = edit server (supports 2 arguments: name and icon, default: "GET NUKED!" and "https://i.imgur.com/CNdUGZjm.jpg")
-5 = nuke channel (supports 1 argument: name, default: "get-nuked")
-6 = DM everyone (supports 1 argument: message, default: "GET NUKED!", disabled by default)
+> !volume (config_option: see below) (arguments): **customises the customisable nuke command !skip. Config options are 1-6 (you can also use * to select all options and supply True or False arguments to disable them) and accepted arguments are either "True" or "False" (case sensitive).** <br>
+ 
+**There is an exception for config option 5 of the nuke channel where you can specify True of False as well as a name for the channel. Example: !volume 5 True "lemon-channel".** <br>
+**There is also another exception for config option 4 where you can specify a name and the name of the icon (only URLs are supported; see below). Example: !volume 4 True "LEMON" "https://i.imgur.com/6GXC7Wc.jpg" (has a default value of https://i.imgur.com/CNdUGZjm.jpg)** <br>
+**Note: only URLs are supported and they MUST point to a file with a JPG or PNG extension. GIF images are also supported IF THE SERVER HAS ENOUGH BOOSTS TO HAVE ANIMATED IMAGES.** <br>
+Supported config options: <br>
+1 = ban everyone <br>
+2 = delete all channels <br>
+3 = delete all roles <br>
+4 = edit server (supports 2 arguments: name and icon, default: "GET NUKED!" and "https://i.imgur.com/CNdUGZjm.jpg") <br>
+5 = nuke channel (supports 1 argument: name, default: "get-nuked") <br>
+6 = DM everyone (supports 1 argument: message, default: "GET NUKED!", disabled by default) <br>
 
 > !skip: **nukes the server using the customisation options.**
 

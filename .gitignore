@@ -10,7 +10,7 @@ dist/
 old/
 
 # The file containing environment variables 
-.env
+# .env
 
 # Ignore IDE specific files
 .idea/

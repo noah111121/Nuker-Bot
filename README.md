@@ -1,5 +1,5 @@
 # Nuker Bot
-## Latest stable version: v1.0
+## Latest stable version: v1.1
 Executables will no longer be available in the repository, you can find them in the [releases page](https://github.com/KingWaffleIII/Nuker-Bot/releases).
 
 ### DISCLAIMER: I DO NOT TAKE ANY RESPONSIBILITY FOR ANY GREIF CAUSED BY USING THIS BOT.
@@ -51,25 +51,33 @@ Executables will no longer be available in the repository, you can find them in 
 > !pause: **bans the user running the command; useful after a nuke to ban yourself to avoid suspicion that you were responsible.** <br>
 > !stop: **same as !pause in the way that it bans you, but it also removes the bot (see Notes section for when to use !pause or !stop).** <br>
 > !leave: **simply removes the bot from the server.** <br>
+> 
+> !volume **(config_option: see below) (arguments): customises the customisable nuke command !skip. Config options are 1-7 (you can also use * to select all options and supply True or False arguments to disable them) and accepted arguments are either "True" or "False" (case-sensitive).**
 
-> !volume (config_option: see below) (arguments): **customises the customisable nuke command !skip. Config options are 1-6 (you can also use * to select all options and supply True or False arguments to disable them) and accepted arguments are either "True" or "False" (case sensitive).** <br>
- 
-**There is an exception for config option 5 of the nuke channel where you can specify True of False as well as a name for the channel. Example: !volume 5 True "lemon-channel".** <br>
-**There is also another exception for config option 4 where you can specify a name and the name of the icon (only URLs are supported; see below). Example: !volume 4 True "LEMON" "https://i.imgur.com/6GXC7Wc.jpg" (has a default value of https://i.imgur.com/CNdUGZjm.jpg)** <br>
-**Note: only URLs are supported and they MUST point to a file with a JPG or PNG extension. GIF images are also supported IF THE SERVER HAS ENOUGH BOOSTS TO HAVE ANIMATED IMAGES.** <br>
-Supported config options: <br>
+**Note: only URLs are supported for the server icon and they MUST point to a file with a JPG or PNG extension. GIF images are also supported IF THE SERVER HAS ENOUGH BOOSTS TO HAVE ANIMATED IMAGES.** <br>
+**Supported config options:** <br>
 1 = ban everyone <br>
 2 = delete all channels <br>
 3 = delete all roles <br>
-4 = edit server (supports 2 arguments: name and icon, default: "GET NUKED!" and "https://i.imgur.com/CNdUGZjm.jpg") <br>
-5 = nuke channel (supports 1 argument: name, default: "get-nuked") <br>
-6 = DM everyone (supports 1 argument: message, default: "GET NUKED!", disabled by default) <br>
+4 = edit server (supports 2 arguments: name [str] and icon [URL], default: "GET NUKED!" and "https://i.imgur.com/CNdUGZjm.jpg") <br>
+5 = nuke channel (supports 1 argument: name [str], default: "get-nuked") <br>
+6 = DM everyone (supports 1 argument: message [str], default: "GET NUKED!", disabled by default) <br>
+7 = nick everyone (supports 1 argument: nickname [str], default: "GET NUKED!", disabled by default) <br>
 
 > !skip: **nukes the server using the customisation options.**
 
 > !*: **Every command run that starts with a "!" triggers the bot to respond with a BS error that claims that the server is down in an attempt to excuse the fact that all typical Rythm commands are not functional.** <br>
 
 ### Notes: <br>
+> Configuration options for the bot (e.g. prefix, status, etc.) are available in the .env file:
+>  - Support for custom statuses and prefixes has been added; please use the syntax below: <br>
+> 
+> - Prefix:
+> (default)`PREFIX=!` Replace the exclamation mark with whatever you want (except `=` since this will break the syntax).
+> 
+> - Status:
+> (default)`STATUS=watching,for !help` pPlease look closely and notice that the activity type (playing, watching, streaming or listening) is put directly after the `=` and seperated from the actual status itself by a comma. Please use this syntax exactly and replace `watching` with your activity type and anything after the comma will be detected as the status. 
+>
 > Dotenv files are now supported so you can paste your TOKEN into the .env file after the equals symbol.
 >
 > Any command beginning with "!" (inc. the nuking commands) will trigger the BS error so do keep this in mind (could be good or bad, depending on the situation).

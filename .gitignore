@@ -5,8 +5,10 @@ __pycache__/
 logs
 *.log
 
-# Ignore the build and old directory
+# Ignore the build stuff and old directory
 dist/
+build/
+*.spec
 old/
 
 # The file containing environment variables 

@@ -1,6 +1,6 @@
 # Nuker Bot
 ## Latest stable version: v1.0
-Old executables will no longer be available; only for the latest stable version.
+Executables will no longer be available in the repository, you can find them in the [releases page](https://github.com/KingWaffleIII/Nuker-Bot/releases).
 
 ### DISCLAIMER: I DO NOT TAKE ANY RESPONSIBILITY FOR ANY GREIF CAUSED BY USING THIS BOT.
 **YOU are responsible if you use this bot to nuke a Discord server.**
@@ -9,9 +9,12 @@ Old executables will no longer be available; only for the latest stable version.
 **I do not recommend using this on a community server and any griefs will stay on your record.**
 
 ### Shortcuts:
-[Usage](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#usage)
-[Installation](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#installation)
-[Setup](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#setup)
+[Usage](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#usage) |
+[Installation](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#installation) |
+[Setup](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#setup) 
+
+[Changelog](https://github.com/KingWaffleIII/Nuker-Bot/blob/dev/CHANGELOG.md) |
+[Releases](https://github.com/KingWaffleIII/Nuker-Bot/releases)
 
 ### *Why should you use a bot?* <br>
 **When nuking, you can either utilise administrator permissions and do it yourself, or you can use a bot. In my opinion, the latter is much better. Let's look at the pros and cons of each:**

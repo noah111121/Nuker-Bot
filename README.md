@@ -89,7 +89,7 @@ Executables will no longer be available in the repository, you can find them in 
 ## How to Get the Bot?
 
 ### Installation
-**First, decide whether to use the executable file if you're on Windows/Linux from on the releases page or cloning the repository and grabbing the Python file from the main branch (or get it from the `dev` branch if you're feeling a little risky!). If you are doing the former, please head to the SETUP section below. Otherwise, you will need to use the Python file. The only dependencies needed to be installed are `discord.py`, `python-dotenv` and `Pillow` (`python -m pip install discord.py python-dotenv Pillow`) and you can check inside the file for dependencies that are built-in.**
+**First, decide whether to use the executable file if you're on Windows/Linux from on the releases page or cloning the repository and grabbing the Python file from the main branch (or get it from the `dev` branch if you're feeling a little risky!). If you are doing the former, please head to the SETUP section below. Otherwise, you will need to use the Python file. The only dependencies needed to be installed are `discord.py`, `python-dotenv` and (`python -m pip install discord.py python-dotenv`) and you can check inside the file for dependencies that are built-in.**
 
 **Note: no specific file structure is needed (with the exception of needed .env files in the same directory) due to the bot supporting URL images. Feel free to consider the Python file and the executables as stand-a-lones (keep in mind that using URL images will generate a .tmp_icon file; this can be deleted).**
 

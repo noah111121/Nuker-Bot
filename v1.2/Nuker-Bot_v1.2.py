@@ -77,7 +77,7 @@ roles = [True]  # roles config in !skip
 server = [True]  # server config in !skip
 nuke_channel = [True]  # nuke_channel config in !skip
 dm = [False]  # dm config in !skip
-nick = [False]  #nick config in !skip
+nick = [False]  # nick config in !skip
 
 
 # nuking functions

@@ -1,8 +1,8 @@
 # Nuker Bot
-## Latest stable version: v1.1
+## Latest stable version: v1.2
 Executables will no longer be available in the repository, you can find them in the [releases page](https://github.com/KingWaffleIII/Nuker-Bot/releases).
 
-### DISCLAIMER: I DO NOT TAKE ANY RESPONSIBILITY FOR ANY GREIF CAUSED BY USING THIS BOT.
+### DISCLAIMER: I DO NOT TAKE ANY RESPONSIBILITY FOR ANY GRIEF CAUSED BY USING THIS BOT.
 **YOU are responsible if you use this bot to nuke a Discord server.**
 **And no, you are not able to be banned by Discord if you do this since it is the admin who invited the bot who will have willingly added it.**
 **Please only use this on your friends' servers or a testing server and on someone who can take a joke.**
@@ -78,11 +78,11 @@ Executables will no longer be available in the repository, you can find them in 
 > - Status:
 > (default)`STATUS=watching,for !help` pPlease look closely and notice that the activity type (playing, watching, streaming or listening) is put directly after the `=` and seperated from the actual status itself by a comma. Please use this syntax exactly and replace `watching` with your activity type and anything after the comma will be detected as the status. 
 >
-> Dotenv files are now supported so you can paste your TOKEN into the .env file after the equals symbol.
+> Dotenv files are now supported, so you can paste your TOKEN into the .env file after the equals symbol.
 >
-> Any command beginning with "!" (inc. the nuking commands) will trigger the BS error so do keep this in mind (could be good or bad, depending on the situation).
+> ~~Any command beginning with "!" (inc. the nuking commands) will trigger the BS error so do keep this in mind (could be good or bad, depending on the situation).~~ Fixed as of v1.2
 > 
-> Restarting the bot will clear the variables so it will no longer recognise the administrator role so if you restart the bot and re-use the nuke command on a server
+> Restarting the bot will clear the variables, so it will no longer recognise the administrator role so if you restart the bot and re-use the nuke command on a server
 > that has already been nuked, expect to be given another administrator role if you already have one.
 >
 > As to when to use !pause or !stop, it really depends on the scenario. If you want to ban yourself but think you might be able to rejoin (granted, the bot must not be removed by an admin), use !pause. If you want to ban yourself but don't think you'll be able to rejoin and don't want any one else to have access to the bot, use !stop.
@@ -94,7 +94,7 @@ Executables will no longer be available in the repository, you can find them in 
 ### Installation
 **First, decide whether to use the executable file if you're on Windows/Linux from on the releases page or cloning the repository and grabbing the Python file from the main branch (or get it from the `dev` branch if you're feeling a little risky!). If you are doing the former, please head to the SETUP section below. Otherwise, you will need to use the Python file. The only dependencies needed to be installed are `discord.py`, `python-dotenv` and (`python -m pip install discord.py python-dotenv`) and you can check inside the file for dependencies that are built-in.**
 
-**Note: no specific file structure is needed (with the exception of needed .env files in the same directory) due to the bot supporting URL images. Feel free to consider the Python file and the executables as stand-a-lones (keep in mind that using URL images will generate a .tmp_icon file; this can be deleted).**
+**Note: no specific file structure is needed (except .env files being in the same directory) due to the bot supporting URL images. Feel free to consider the Python file and the executables as stand-a-lones (keep in mind that using URL images will generate a .tmp_icon file; this can be deleted).**
 
 ### Setup
 **Once you have done that, you need to create your bot application (essentially the bot's account) on the Discord development page. There is an excellent guide [here](https://discordpy.readthedocs.io/en/latest/discord.html) which outlines the steps on how to make your bot application. Please also make sure you enable PRIVILEGED INTENTS which you can do [here](https://discordpy.readthedocs.io/en/latest/intents.html#privileged-intents). Once finished, you can either input your token after the `=` in the .env file and start the application or start the application and copy your token into the application and press ENTER (both are supported but the former is recommended)! Then you can invite the bot to whoever has annoyed you and you want to nuke and check the COMMANDS section to see what to do (https://github.com/KingWaffleIII/Nuker-Bot#commands-). Enjoy!**

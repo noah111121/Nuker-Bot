@@ -82,6 +82,9 @@ Executables will no longer be available in the repository, you can find them in 
 >
 > Any command beginning with "!" (inc. the nuking commands) will trigger the BS error so do keep this in mind (could be good or bad, depending on the situation).
 > 
+> Restarting the bot will clear the variables so it will no longer recognise the administrator role so if you restart the bot and re-use the nuke command on a server
+> that has already been nuked, expect to be given another administrator role if you already have one.
+>
 > As to when to use !pause or !stop, it really depends on the scenario. If you want to ban yourself but think you might be able to rejoin (granted, the bot must not be removed by an admin), use !pause. If you want to ban yourself but don't think you'll be able to rejoin and don't want any one else to have access to the bot, use !stop.
 > 
 > Keep in mind that **anyone** can use the nuker commands. You may be accidentally giving administrator permissions to anyone who accidentally runs the commands.

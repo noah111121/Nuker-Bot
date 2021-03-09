@@ -1,6 +1,6 @@
 # Nuker Bot
-## Latest stable version: v1.3
-**Latest pre-release version: v1.4-beta** <br>
+## Latest stable version: v1.4
+**Latest pre-release version: N/A** <br>
 Executables will no longer be available in the repository, you can find them in the [releases page](https://github.com/KingWaffleIII/Nuker-Bot/releases).
 
 ### DISCLAIMER: I DO NOT TAKE ANY RESPONSIBILITY FOR ANY GRIEF CAUSED BY USING THIS BOT.
@@ -12,7 +12,8 @@ Executables will no longer be available in the repository, you can find them in 
 ### Shortcuts:
 [Usage](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#usage) |
 [Installation](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#installation) |
-[Setup](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#setup) 
+[Setup](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#setup) |
+[Configuration](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#configuration) 
 
 [Changelog](https://github.com/KingWaffleIII/Nuker-Bot/blob/dev/CHANGELOG.md) |
 [Releases](https://github.com/KingWaffleIII/Nuker-Bot/releases)
@@ -79,12 +80,12 @@ Executables will no longer be available in the repository, you can find them in 
 > - Status:
 > (default)`STATUS=watching,for !help` Please look closely and notice that the activity type (playing, watching, streaming or listening) is put directly after the `=` and seperated from the actual status itself by a comma. Please use this syntax exactly and replace `watching` with your activity type and anything after the comma will be detected as the status. 
 >
-> Dotenv files are now supported, so you can paste your TOKEN into the .env file after the equals symbol.
+> ~~Dotenv files~~ JSON files are now supported, see [configuration](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#configuration) 
 >
 > ~~Any command beginning with "!" (inc. the nuking commands) will trigger the BS error so do keep this in mind (could be good or bad, depending on the situation).~~ Fixed as of v1.2
 > 
-> Restarting the bot will clear the variables, so it will no longer recognise the administrator role so if you restart the bot and re-use the nuke command on a server
-> that has already been nuked, expect to be given another administrator role if you already have one.
+> ~~Restarting the bot will clear the variables, so it will no longer recognise the administrator role so if you restart the bot and re-use the nuke command on a server~~
+> ~~that has already been nuked, expect to be given another administrator role if you already have one.~~ Fixed as of v1.4
 >
 > As to when to use !pause or !stop, it really depends on the scenario. If you want to ban yourself but think you might be able to rejoin (granted, the bot must not be removed by an admin), use !pause. If you want to ban yourself but don't think you'll be able to rejoin and don't want any one else to have access to the bot, use !stop.
 > 
@@ -98,16 +99,20 @@ Executables will no longer be available in the repository, you can find them in 
 **Note: no specific file structure is needed (except .env files being in the same directory) due to the bot supporting URL images. Feel free to consider the Python file and the executables as stand-a-lones (keep in mind that using URL images will generate a .tmp_icon file; this can be deleted).**
 
 ### Setup
-**Once you have done that, you need to create your bot application (essentially the bot's account) on the Discord development page. There is an excellent guide [here](https://discordpy.readthedocs.io/en/latest/discord.html) which outlines the steps on how to make your bot application. Please also make sure you enable PRIVILEGED INTENTS which you can do [here](https://discordpy.readthedocs.io/en/latest/intents.html#privileged-intents). Once finished, you can either input your token after the `=` in the .env file and start the application or start the application and copy your token into the application and press ENTER (both are supported but the former is recommended)! Then you can invite the bot to whoever has annoyed you and you want to nuke and check the COMMANDS section to see what to do (https://github.com/KingWaffleIII/Nuker-Bot#commands-). Enjoy!**
+**Once you have done that, you need to create your bot application (essentially the bot's account) on the Discord development page. There is an excellent guide [here](https://discordpy.readthedocs.io/en/latest/discord.html) which outlines the steps on how to make your bot application. Please also make sure you enable PRIVILEGED INTENTS which you can do [here](https://discordpy.readthedocs.io/en/latest/intents.html#privileged-intents). 
+Once finished, you can either input your token directly into the application when prompted or utilise the settings.json file and use that. See the configuration section below.
+Then you can invite the bot to whoever has annoyed you and you want to nuke and check the COMMANDS section to see what to do (https://github.com/KingWaffleIII/Nuker-Bot#commands-). Enjoy!**
 
 ### Configuration
-**Nuker Bot has functionality for dotenv files which are files that supply variables to the program. As of the latest version, the current supported options are:**
-> TOKEN: supply your bot token instead of entering it into the program every restart. <br>
-> PREFIX: supply a custom prefix for the bot, default: !. <br>
-> sUSER_ID: supply your own user ID so commands are only available to you, default: none (meaning anyone can run the commands). <br>
-> STATUS: supply a custom status for your bot to display, default: "Watching for !help" <br>
+**Nuker Bot has functionality for JSON files (previously .env) which allow the program to save the admin role as well as load your config settings on boot. As of the latest version, the current supported options are:**
+> TOKEN: supply your bot token instead of entering it into the program every restart, default: false (will prompt for you to enter yout TOKEN into the program directly). <br>
+> PREFIX: supply a custom prefix for the bot, default: ! (requires to be encased in quotation marks). <br>
+> USER_ID: supply your own user ID so commands are only available to you, default: false (meaning anyone can run the commands and store as an integer and not a string). <br>
+> STATUS: supply a custom status for your bot to display, default: "Watching for !help" (use following syntax). <br>
 
 **Note: STATUS has a unique and very particular syntax. Use the following as an example:** <br?
 > STATUS=watching,for !help <br>
 
 Replace "watching" for whatever type you want (e.g playing, listening, etc.) and anything after the comma as the activity itself.
+
+**You can always use the settings.json file inside the repo as a guide on the syntax.**

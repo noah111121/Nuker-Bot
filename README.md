@@ -4,6 +4,9 @@
 **Latest pre-release version: N/A** <br>
 Executables will no longer be available in the repository, you can find them in the [releases page](https://github.com/KingWaffleIII/Nuker-Bot/releases).
 
+### Don't want to host this bot yourself and use a hosted one and want to stay up to date with all information related to this bot?
+> **Join our Discord server [here](https://discord.gg/HaUytPF8bw)!**
+
 ### DISCLAIMER: I DO NOT TAKE ANY RESPONSIBILITY FOR ANY GRIEF CAUSED BY USING THIS BOT.
 **YOU are responsible if you use this bot to nuke a Discord server.**
 **And no, you are not able to be banned by Discord if you do this since it is the admin who invited the bot who will have willingly added it.**

@@ -1,6 +1,10 @@
 # Nuker Bot
 ## Latest stable version: v1.4
+<<<<<<< HEAD
 **Latest pre-release version: N/A** <br>
+=======
+**Latest pre-release version: v1.4-alpha** <br>
+>>>>>>> 6fef6235e29c4a244737569ce4787594bf435546
 Executables will no longer be available in the repository, you can find them in the [releases page](https://github.com/KingWaffleIII/Nuker-Bot/releases).
 
 ### DISCLAIMER: I DO NOT TAKE ANY RESPONSIBILITY FOR ANY GRIEF CAUSED BY USING THIS BOT.
@@ -114,5 +118,8 @@ Then you can invite the bot to whoever has annoyed you and you want to nuke and 
 > STATUS=watching,for !help <br>
 
 Replace "watching" for whatever type you want (e.g playing, listening, etc.) and anything after the comma as the activity itself.
+<<<<<<< HEAD
 
 **You can always use the settings.json file inside the repo as a guide on the syntax.**
+=======
+>>>>>>> 6fef6235e29c4a244737569ce4787594bf435546

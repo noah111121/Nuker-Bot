@@ -1,10 +1,7 @@
 # Nuker Bot
+
 ## Latest stable version: v1.4
-<<<<<<< HEAD
 **Latest pre-release version: N/A** <br>
-=======
-**Latest pre-release version: v1.4-alpha** <br>
->>>>>>> 6fef6235e29c4a244737569ce4787594bf435546
 Executables will no longer be available in the repository, you can find them in the [releases page](https://github.com/KingWaffleIII/Nuker-Bot/releases).
 
 ### DISCLAIMER: I DO NOT TAKE ANY RESPONSIBILITY FOR ANY GRIEF CAUSED BY USING THIS BOT.
@@ -75,14 +72,7 @@ Executables will no longer be available in the repository, you can find them in 
 > !*: **Every command run that starts with a "!" triggers the bot to respond with a BS error that claims that the server is down in an attempt to excuse the fact that all typical Rythm commands are not functional.** <br>
 
 ### Notes: <br>
-> Configuration options for the bot (e.g. prefix, status, etc.) are available in the .env file:
->  - Support for custom statuses and prefixes has been added; please use the syntax below: <br>
-> 
-> - Prefix:
-> (default)`PREFIX=!` Replace the exclamation mark with whatever you want (except `=` since this will break the syntax).
-> 
-> - Status:
-> (default)`STATUS=watching,for !help` Please look closely and notice that the activity type (playing, watching, streaming or listening) is put directly after the `=` and seperated from the actual status itself by a comma. Please use this syntax exactly and replace `watching` with your activity type and anything after the comma will be detected as the status. 
+> Configuration options for the bot (e.g. prefix, status, etc.) are available in the JSON file; see configuration section.
 >
 > ~~Dotenv files~~ JSON files are now supported, see [configuration](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#configuration) 
 >
@@ -118,8 +108,5 @@ Then you can invite the bot to whoever has annoyed you and you want to nuke and 
 > STATUS=watching,for !help <br>
 
 Replace "watching" for whatever type you want (e.g playing, listening, etc.) and anything after the comma as the activity itself.
-<<<<<<< HEAD
 
 **You can always use the settings.json file inside the repo as a guide on the syntax.**
-=======
->>>>>>> 6fef6235e29c4a244737569ce4787594bf435546

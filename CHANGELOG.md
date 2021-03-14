@@ -3,9 +3,11 @@
 ### Latest stable version: v1.4
 **Latest pre-release version: N/A**
 
-### Changes planned (will be ticked off when available in (minimum) alpha versions):
+### Changes planned (will be ticked off when available in (minimum) alpha versions and by default, all changes planned are high priority unless specified):
 
-> - **(@QuantumFox42) Add support for a custom amount of "nuke channels"**
+> - **Add support for a custom amount of "nuke channels"**
+> - **Check if the server is boosted before applying a GIF for the server icon (as well as a default GIF)**
+> - **[Low Priority] Be able to send (a) message(s) into the nuke channel(s)**
 
 ### Updated README.md (extends main/README.md so read that first)
 

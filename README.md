@@ -7,11 +7,11 @@ Executables will no longer be available in the repository, you can find them in 
 ### Don't want to host this bot yourself and use a hosted one and want to stay up to date with all information related to this bot?
 > **Join our Discord server [here](https://discord.gg/HaUytPF8bw)!**
 
-### DISCLAIMER: I DO NOT TAKE ANY RESPONSIBILITY FOR ANY GRIEF CAUSED BY USING THIS BOT.
+### DISCLAIMER: WE DO NOT TAKE ANY RESPONSIBILITY FOR ANY GRIEF CAUSED BY USING THIS BOT.
 **YOU are responsible if you use this bot to nuke a Discord server.**
 **And no, you are not able to be banned by Discord if you do this since it is the admin who invited the bot who will have willingly added it.**
 **Please only use this on your friends' servers or a testing server and on someone who can take a joke.**
-**I do not recommend using this on a community server and any griefs will stay on your record.**
+**WE do not recommend using this on a community server and any griefs will stay on your record.**
 
 ### Shortcuts:
 [Usage](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#usage) |

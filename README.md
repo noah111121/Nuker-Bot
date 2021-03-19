@@ -111,5 +111,3 @@ Then you can invite the bot to whoever has annoyed you and you want to nuke and 
 > STATUS=watching,for !help <br>
 
 Replace "watching" for whatever type you want (e.g playing, listening, etc.) and anything after the comma as the activity itself.
-
-**You can always use the settings.json file inside the repo as a guide on the syntax.**

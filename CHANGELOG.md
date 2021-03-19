@@ -1,11 +1,12 @@
 # Nuker Bot Changelog
 
-### Latest stable version: v1.4
+### Latest stable version: v1.5
 **Latest pre-release version: N/A**
 
 ### Changes planned (will be ticked off when available in (minimum) alpha versions and by default, all changes planned are high priority unless specified):
 
-> - **Add support for a custom amount of "nuke channels"**
+> - **Planned for v1.6:** <br>
+> - **Add support for a custom amount of "nuke channels"** 
 > - **Check if the server is boosted before applying a GIF for the server icon (as well as a default GIF)**
 > - **[Low Priority] Be able to send (a) message(s) into the nuke channel(s)**
 

@@ -1,3 +1,0 @@
-this is just a thing for development to keep note of stuff because i dont know where the living waffle wants me to put this stuff :)
-
-bot was trying to process commands even if they didnt exist, even after sending the funny server error embed, it is fixed now ☺

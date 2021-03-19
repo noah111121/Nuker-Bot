@@ -3,7 +3,7 @@
 
 ## Latest Pre-Release Version: N/A
 ### This section contains the pre-release versions; some features may be unstable or not work at all!
-**Last STABLE version: v1.4**
+**Last STABLE version: v1.5**
 
 **Here are the pre-release which is created when enough of the planned features are stable. It is available but I don't recommend you do unless you're feeling a little risky since many features can be unstable or broken.**
 
@@ -13,3 +13,4 @@
 **You may find requests and fixes from pull requests, issues, etc. in these versions.**
 **All pre-release version will be officially released on the releases page but only Python files will be available.**
 
+You can find planned changes [here](https://github.com/KingWaffleIII/Nuker-Bot/blob/main/CHANGELOG.md)

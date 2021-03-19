@@ -1,6 +1,6 @@
 # Nuker Bot
 
-## Latest stable version: v1.4
+## Latest stable version: v1.5
 **Latest pre-release version: N/A** <br>
 Executables will no longer be available in the repository, you can find them in the [releases page](https://github.com/KingWaffleIII/Nuker-Bot/releases).
 

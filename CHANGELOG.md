@@ -13,6 +13,10 @@
 
 <br><br><br><br>
 
+### v1.3 => v1.5:
+
+> - **Fixed bug where bot tried to process commands that didn't exist.**
+
 ### v1.3 => v1.4:
 
 > - **Switched from .env files to JSON; see the config section in the main README.md.**

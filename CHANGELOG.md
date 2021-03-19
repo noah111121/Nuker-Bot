@@ -13,7 +13,7 @@
 
 <br><br><br><br>
 
-### v1.3 => v1.5:
+### v1.4 => v1.5:
 
 > - **Fixed bug where bot tried to process commands that didn't exist.**
 

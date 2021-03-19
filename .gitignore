@@ -5,6 +5,9 @@ __pycache__/
 logs
 *.log
 
+# Ignore settings.json files
+settings.json
+
 # Ignore the build stuff and old directory
 dist/
 build/

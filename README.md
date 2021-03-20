@@ -75,6 +75,8 @@ Executables will no longer be available in the repository, you can find them in 
 > !*: **Every command run that starts with a "!" triggers the bot to respond with a BS error that claims that the server is down in an attempt to excuse the fact that all typical Rythm commands are not functional.** <br>
 
 ### Notes: <br>
+> Volume control (customisable nuking options) is not server specific and will affect all servers the bot is in, as well as overwriting previously set nuking options; keep this in mind if you are using a bot that is in multiple servers (planned to be fixed in v1.6).
+> 
 > Configuration options for the bot (e.g. prefix, status, etc.) are available in the JSON file; see configuration section.
 >
 > ~~Dotenv files~~ JSON files are now supported, see [configuration](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#configuration) 

@@ -34,7 +34,6 @@
 > - **Added support where you can supply your user ID so all commands can only work for you.**
 
 ### v1.1 => v1.2:
-**Features:**
 > - Fixed the bug where recognised commands would trigger a made-up error.
 
 ### v1.0 => v1.1:

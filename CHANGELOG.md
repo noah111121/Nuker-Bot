@@ -6,11 +6,13 @@
 ### Changes planned (will be ticked off when available in (minimum) alpha versions and by default, all changes planned are high priority unless specified):
 
 **Planned for v1.6:** <br>
+> - **Fix bug where "volume control" (customisable nuking options) is not server specific and will change for all servers the bot is in.**
+> - **Add support for saving volume control (^^^) so upon restart of the bot, it will remember nuking options.**
+
+**Planned for v1.7:** <br>
 > - **Add support for a custom amount of "nuke channels".** 
 > - **Check if the server is boosted before applying a GIF for the server icon (as well as a default GIF).**
 > - **Be able to send (a) message(s) into the nuke channel(s).**
-> - **Fix bug where "volume control" (customisable nuking options) is not server specific and will change for all servers the bot is in.**
-> - **Add support for saving volume control (^^^) so upon restart of the bot, it will remember nuking options.**
 
 ### Updated README.md (extends main/README.md so read that first)
 

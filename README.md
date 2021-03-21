@@ -19,7 +19,7 @@ Executables will no longer be available in the repository, you can find them in 
 [Setup](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#setup) |
 [Configuration](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#configuration) 
 
-[Changelog](https://github.com/KingWaffleIII/Nuker-Bot/blob/dev/CHANGELOG.md) |
+[Changelog](https://github.com/KingWaffleIII/Nuker-Bot/blob/main/CHANGELOG.md) |
 [Releases](https://github.com/KingWaffleIII/Nuker-Bot/releases)
 
 ### *Why should you use a bot?* <br>

@@ -18,9 +18,10 @@ if "settings.json" not in listdir():
     file = open("settings.json", "w+")
     file.write("""{
     "TOKEN": false,
-    "USERID": false,    
+    "USERID": false,
     "PREFIX": "!",
     "STATUS": "watching,for !help",
+    "LOGFILE": "nuker_bot_log.txt",
     "ROLE_IDS": {}
 }""")
     file.close()
@@ -37,9 +38,10 @@ TOKEN = settings["TOKEN"]
 PREFIX = settings["PREFIX"]
 STATUS = settings["STATUS"]
 USER_ID = settings["USERID"]
+LOGFILE = settings["LOGFILE"]
 
 # parse the STATUS var
-if STATUS is not None:
+if STATUS is not None and STATUS is not False:
     tmp = STATUS.split(",")
     ACTIVITY_TYPE = tmp[0]
     ACTIVITY = tmp[1]
@@ -105,7 +107,7 @@ def writeRoleIDs(write):
 
 # logging function
 def output_log(text):
-    with open(f"nuker_bot_log.txt", "a+") as f:
+    with open(LOGFILE, "a+") as f:
         f.write("\n  ".join((datetime.now().strftime("%d/%m/%Y %H:%M:%S\n")+text.removeprefix("\n")).splitlines())+"\n\n")
         f.close()
 
@@ -251,7 +253,7 @@ async def on_ready():
     for guild in bot.guilds:
         print(guild.name)
 
-    print(f"Logging in \"nuker_bot_log.txt\"")
+    print(f"Logging in \"{LOGFILE}\"")
 
 
 # outputs to the log some basic info about the new guild when connected

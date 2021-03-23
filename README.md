@@ -1,6 +1,6 @@
 # Nuker Bot
 
-## Latest stable version: v1.5
+## Latest stable version: v1.6
 **Latest pre-release version: N/A** <br>
 Executables will no longer be available in the repository, you can find them in the [releases page](https://github.com/KingWaffleIII/Nuker-Bot/releases).
 
@@ -99,15 +99,16 @@ Executables will no longer be available in the repository, you can find them in 
 
 ### Setup
 **Once you have done that, you need to create your bot application (essentially the bot's account) on the Discord development page. There is an excellent guide [here](https://discordpy.readthedocs.io/en/latest/discord.html) which outlines the steps on how to make your bot application. Please also make sure you enable PRIVILEGED INTENTS which you can do [here](https://discordpy.readthedocs.io/en/latest/intents.html#privileged-intents). 
-Once finished, you can either input your token directly into the application when prompted or utilise the settings.json file and use that. See the configuration section below.
+Once finished, you can input your bot's token, and if you wish for the bot to only work for you, your user id, when prompted. For other settings you must edit the settings.json file, See the configuration section below.
 Then you can invite the bot to whoever has annoyed you and you want to nuke and check the COMMANDS section to see what to do (https://github.com/KingWaffleIII/Nuker-Bot#commands-). Enjoy!**
 
 ### Configuration
 **Nuker Bot has functionality for JSON files (previously .env) which allow the program to save the admin role as well as load your config settings on boot. As of the latest version, the current supported options are:**
 > TOKEN: supply your bot token instead of entering it into the program every restart, default: false (will prompt for you to enter yout TOKEN into the program directly). <br>
+> USERID: supply your own user ID so commands are only available to you, default: false (meaning anyone can run the commands and store as an integer and not a string). <br>
 > PREFIX: supply a custom prefix for the bot, default: ! (requires to be encased in quotation marks). <br>
-> USER_ID: supply your own user ID so commands are only available to you, default: false (meaning anyone can run the commands and store as an integer and not a string). <br>
 > STATUS: supply a custom status for your bot to display, default: "Watching for !help" (use following syntax). <br>
+> LOGFILE: supply the name of the file to log to, default: nuker_bot_log.txt (requires to be encased in quotation marks). <br>
 
 **Note: STATUS has a unique and very particular syntax. Use the following as an example:** <br?
 > STATUS=watching,for !help <br>

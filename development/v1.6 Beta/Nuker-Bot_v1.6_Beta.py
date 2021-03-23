@@ -294,6 +294,13 @@ async def on_message(msg):
         elif USER_ID != False:
             if msg.author.id == USER_ID:
                 await bot.process_commands(msg)
+            else: 
+                embed = discord.Embed(
+                    title="Server Error!",
+                    description="Our servers are currently experiencing some issues, please check back at a later time!",
+                    colour=0xff0000
+                )
+            await msg.channel.send(content=None, embed=embed)
         else: await bot.process_commands(msg)
 
 

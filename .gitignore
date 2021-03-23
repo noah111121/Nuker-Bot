@@ -3,7 +3,7 @@ __pycache__/
 
 # Ignore Logs
 logs
-*.log
+*.txt
 
 # Ignore settings.json files
 settings.json

@@ -5,6 +5,9 @@ __pycache__/
 logs
 *.txt
 
+# Ignore Icon
+.tmp_icon
+
 # Ignore settings.json files
 settings.json
 

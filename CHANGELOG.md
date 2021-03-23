@@ -5,11 +5,11 @@
 
 ### Changes planned (will be ticked off when available in (minimum) alpha versions and by default, all changes planned are high priority unless specified):
 
-**Planned for v1.6:** <br>
+**Planned for v1.7:** <br>
 > - **Fix bug where "volume control" (customisable nuking options) is not server specific and will change for all servers the bot is in.**
 > - **Add support for saving volume control (^^^) so upon restart of the bot, it will remember nuking options.**
 
-**Planned for v1.7:** <br>
+**Planned for v1.8:** <br>
 > - **Add support for a custom amount of "nuke channels".** 
 > - **Check if the server is boosted before applying a GIF for the server icon (as well as a default GIF).**
 > - **Be able to send (a) message(s) into the nuke channel(s).**
@@ -21,6 +21,10 @@
 ### v1.5 => v1.6:
 
 > - **Revamped logging function.**
+> - **Token and user id are now entered via inputs and saved, rather than having to open the settings.json file.**
+> - **Now sends the error message if unauthorised user attempts to enter a command.**
+> - **Fixed the bug that prevented commands from being entered by anyone if the userid was set to false.**
+> - **Fixed small bugs.**
 
 ### v1.4 => v1.5:
 

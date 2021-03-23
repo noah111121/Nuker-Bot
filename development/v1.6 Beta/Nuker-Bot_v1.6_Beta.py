@@ -15,6 +15,7 @@ from json import loads, dumps
 
 # If settings json doesn't exist, create it
 if "settings.json" not in listdir():
+    creatednewsettingsjson = True
     file = open("settings.json", "w+")
     file.write("""{
     "TOKEN": false,
@@ -25,9 +26,8 @@ if "settings.json" not in listdir():
     "ROLE_IDS": {}
 }""")
     file.close()
-    input(
-        "Created Settings JSON, please fill in your bot's token and your user ID (for correct syntax, look at the "
-        "README.md on the GitHub repository)! To continue, press enter!")
+
+else: creatednewsettingsjson = False
 
 # Load settings
 file = open("settings.json", "r")
@@ -39,6 +39,31 @@ PREFIX = settings["PREFIX"]
 STATUS = settings["STATUS"]
 USER_ID = settings["USERID"]
 LOGFILE = settings["LOGFILE"]
+
+while not TOKEN:
+    tok = input("Please input your bot's token and press enter to continue: ")
+    if tok != "":
+        file = open("settings.json", "r")
+        read = loads(file.read())
+        read["TOKEN"] = tok
+        file.close()
+        file = open("settings.json", "w+")
+        file.write(dumps(read))
+        file.close()
+        TOKEN = tok
+
+if creatednewsettingsjson:
+    uid = input("If you would like the bot to only work for you, please input your userid, otherwise leave blank and then press enter to continue: ")
+    if uid != "":
+        file = open("settings.json", "r")
+        read = loads(file.read())
+        read["USERID"] = int(uid)
+        file.close()
+        file = open("settings.json", "w+")
+        file.write(dumps(read))
+        file.close()
+        USER_ID = uid
+
 
 # parse the STATUS var
 if STATUS is not None and STATUS is not False:
@@ -794,17 +819,4 @@ Server Owner: {ctx.guild.owner}
 ''')
 
 
-if not TOKEN:
-    print("Could not find token in settings")
-    print("\nPlease enter your bot token: ")
-    print("(if you don't know what this is, please visit: https://github.com/KingWaffleIII/Nuker-Bot#setup to see how "
-          "to make your own bot application)\n")
-    TOKEN = input("> ")
-    try:
-        bot.run(str(TOKEN))
-    except discord.LoginFailure:
-        print("Unable to log into the bot; please verify the bot token is correct!")
-    except KeyboardInterrupt:
-        print("Quitting... press CTRL+C again to kill the app.")
-else:
-    bot.run(TOKEN)
+bot.run(TOKEN)

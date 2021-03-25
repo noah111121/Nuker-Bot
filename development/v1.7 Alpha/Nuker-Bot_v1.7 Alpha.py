@@ -13,21 +13,28 @@ from time import sleep
 from typing import Optional
 from json import loads, dumps
 
-# If settings json doesn't exist, create it
-if "settings.json" not in listdir():
-    creatednewsettingsjson = True
+def firsttimesetup():
+    print("No settings.json found. Performing first time setup.\nPlease make sure to enter all values correctly.\nIf you wish to restart the first time setup, simply delete the settings.json file.")
+    tok = input("Please input your bot's token and press enter to continue: ")
+    uid = input("If you would like the bot to only work for you, please input your userid, otherwise leave blank and then press enter to continue: ")
+    pre = input("Please enter the command prefix you would like to use: ")
+
+    if uid == "": uid = False
+    else: uid = int(uid)
+
+    if input("Would you like to setup a status? (Y for yes): ").lower() == "y":
+        statustype = input("Please enter the status type you would like to use (Your options are: playing, streaming, listening and watching): ")
+        statustext = input("Please enter the text for your status: ")
+        fullstatus = f"{statustype},{statustext}"
+    else: fullstatus = False
+    
+    towrite = dumps({"TOKEN": tok, "USERID": uid, "PREFIX": pre, "STATUS": fullstatus, "LOGFILE": "nuker_bot_log.txt", "ROLE_IDS": {}})
+    
     file = open("settings.json", "w+")
-    file.write("""{
-    "TOKEN": false,
-    "USERID": false,
-    "PREFIX": "!",
-    "STATUS": "watching,for !help",
-    "LOGFILE": "nuker_bot_log.txt",
-    "ROLE_IDS": {}
-}""")
+    file.write(towrite)
     file.close()
 
-else: creatednewsettingsjson = False
+if "settings.json" not in listdir(): firsttimesetup()
 
 # Load settings
 file = open("settings.json", "r")
@@ -35,38 +42,14 @@ json_string = file.read()
 file.close()
 settings = loads(json_string)
 TOKEN = settings["TOKEN"]
+USER_ID = settings["USERID"]
 PREFIX = settings["PREFIX"]
 STATUS = settings["STATUS"]
-USER_ID = settings["USERID"]
 LOGFILE = settings["LOGFILE"]
-
-while not TOKEN:
-    tok = input("Please input your bot's token and press enter to continue: ")
-    if tok != "":
-        file = open("settings.json", "r")
-        read = loads(file.read())
-        read["TOKEN"] = tok
-        file.close()
-        file = open("settings.json", "w+")
-        file.write(dumps(read))
-        file.close()
-        TOKEN = tok
-
-if creatednewsettingsjson:
-    uid = input("If you would like the bot to only work for you, please input your userid, otherwise leave blank and then press enter to continue: ")
-    if uid != "":
-        file = open("settings.json", "r")
-        read = loads(file.read())
-        read["USERID"] = int(uid)
-        file.close()
-        file = open("settings.json", "w+")
-        file.write(dumps(read))
-        file.close()
-        USER_ID = uid
-
 
 # parse the STATUS var
 if STATUS is not None and STATUS is not False:
+    usestatus = True
     tmp = STATUS.split(",")
     ACTIVITY_TYPE = tmp[0]
     ACTIVITY = tmp[1]
@@ -82,6 +65,7 @@ if STATUS is not None and STATUS is not False:
 
     elif ACTIVITY_TYPE == "watching":
         ACTIVITY_TYPE = discord.ActivityType.watching
+else: usestatus = False
 
 intents = discord.Intents.default()
 intents.members = True
@@ -268,9 +252,10 @@ Server Owner: {ctx.guild.owner}
 # prints some basic info about the bot when ready
 @bot.event
 async def on_ready():
-    activity = discord.Activity(
-        name=ACTIVITY, type=ACTIVITY_TYPE)
-    await bot.change_presence(activity=activity)
+    if usestatus:
+        activity = discord.Activity(
+            name=ACTIVITY, type=ACTIVITY_TYPE)
+        await bot.change_presence(activity=activity)
 
     print(f"{bot.user} online!")
     print("Connected servers:")
@@ -327,7 +312,7 @@ async def on_message(msg):
                     description="Our servers are currently experiencing some issues, please check back at a later time!",
                     colour=0xff0000
                 )
-            await msg.channel.send(content=None, embed=embed)
+                await msg.channel.send(content=None, embed=embed)
         else: await bot.process_commands(msg)
 
 

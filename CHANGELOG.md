@@ -18,6 +18,10 @@
 
 <br><br><br><br>
 
+### v1.6 => v1.7:
+> - **Created first time setup.**
+> - **Fixed small bugs.**
+
 ### v1.5 => v1.6:
 
 > - **Revamped logging function.**

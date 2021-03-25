@@ -1,7 +1,7 @@
 # Made by KingWaffleIII and QuantumFox42
 
 # Nuker Bot
-# v1.6 Beta
+# v1.6
 
 import discord
 from discord.ext import commands

@@ -1,6 +1,6 @@
 # Nuker Bot Changelog
 
-### Latest stable version: v1.5
+### Latest stable version: v1.7
 **Latest pre-release version: N/A**
 
 ### Changes planned (will be ticked off when available in (minimum) alpha versions and by default, all changes planned are high priority unless specified):

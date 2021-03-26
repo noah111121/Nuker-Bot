@@ -1,6 +1,6 @@
 # Nuker Bot
 
-## Latest stable version: v1.7
+## Latest stable version: v1.8
 Executables will no longer be available in the repository, you can find them in the [releases page](https://github.com/KingWaffleIII/Nuker-Bot/releases).
 ### Now under new ownership! Owned by The Waffle and Fox Corp.
 

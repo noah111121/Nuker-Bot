@@ -20,6 +20,7 @@
 ### v1.8:
 > - **Server ID is now logged.**
 > - **Show connected servers on startup and logging can now be turned off in the first time setup.**
+> - **No longer loads settings from the settings.json file after first time setup.**
 
 ### v1.7:
 > - **Created first time setup.**

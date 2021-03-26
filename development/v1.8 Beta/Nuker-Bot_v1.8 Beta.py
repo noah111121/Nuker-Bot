@@ -13,51 +13,56 @@ from time import sleep
 from typing import Optional
 from json import loads, dumps
 
-def firsttimesetup():
+if "settings.json" not in listdir():
+    # First time setup
     print("No settings.json found. Performing first time setup.\nPlease make sure to enter all values correctly.\nIf you wish to restart the first time setup, simply delete the settings.json file.")
-    tok = input("Please input your bot's token and press enter to continue: ")
-    uid = input("If you would like the bot to only work for you, please input your userid, otherwise leave blank and then press enter to continue: ")
-    pre = input("Please enter the command prefix you would like to use: ")
 
-    if uid == "": uid = False
-    else: uid = int(uid)
+    # Main Variables
+    TOKEN = input("Please input your bot's token and press enter to continue: ")
+    USER_ID = input("If you would like the bot to only work for you, please input your userid, otherwise leave blank and then press enter to continue: ")
+    PREFIX = input("Please enter the command prefix you would like to use: ")
+    if USER_ID == "": USER_ID = False
+    else: USER_ID = int(USER_ID)
 
+    # Status
     if input("Would you like to setup a status? (Y for yes): ").lower() == "y":
         statustype = input("Please enter the status type you would like to use (Your options are: playing, streaming, listening and watching): ")
         statustext = input("Please enter the text for your status: ")
-        fullstatus = f"{statustype},{statustext}"
-    else: fullstatus = False
+        STATUS = f"{statustype},{statustext}"
+    else: STATUS = False
 
-    if input("Would you like logging to be turned on? (Y/N): ").lower() == "y": logtoggle = True
-    else: logtoggle = False
+    # Log Variables
+    if input("Would you like logging to be turned on? (Y/N): ").lower() == "y": LOG = True
+    else: LOG = False
+    LOGFILE = "nuker_bot_log.txt"
 
-    if input("Would you like the bot to display all the servers it is in on startup? (Y/N): ").lower() == "y": scs = True
-    else: scs = False
+    # Show connected servers on startup
+    if input("Would you like the bot to display all the servers it is in on startup? (Y/N): ").lower() == "y": SHOWCONNECTEDSERVERS = True
+    else: SHOWCONNECTEDSERVERS = False
     
-    towrite = dumps({"TOKEN": tok, "USERID": uid, "PREFIX": pre, "STATUS": fullstatus, "LOG": logtoggle, "LOGFILE": "nuker_bot_log.txt", "SHOWCONNECTEDSERVERS": scs, "ROLE_IDS": {}})
+    towrite = dumps({"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE, "SHOWCONNECTEDSERVERS": SHOWCONNECTEDSERVERS, "ROLE_IDS": {}})
     
     file = open("settings.json", "w+")
     file.write(towrite)
     file.close()
     print()
 
-if "settings.json" not in listdir(): firsttimesetup()
-
-# Load settings
-file = open("settings.json", "r")
-json_string = file.read()
-file.close()
-settings = loads(json_string)
-TOKEN = settings["TOKEN"]
-USER_ID = settings["USERID"]
-PREFIX = settings["PREFIX"]
-STATUS = settings["STATUS"]
-LOG = settings["LOG"]
-LOGFILE = settings["LOGFILE"]
-SHOWCONNECTEDSERVERS = settings["SHOWCONNECTEDSERVERS"]
+else: 
+    # Load settings
+    file = open("settings.json", "r")
+    json_string = file.read()
+    file.close()
+    settings = loads(json_string)
+    TOKEN = settings["TOKEN"]
+    USER_ID = settings["USERID"]
+    PREFIX = settings["PREFIX"]
+    STATUS = settings["STATUS"]
+    LOG = settings["LOG"]
+    LOGFILE = settings["LOGFILE"]
+    SHOWCONNECTEDSERVERS = settings["SHOWCONNECTEDSERVERS"]
 
 # parse the STATUS var
-if STATUS is not None and STATUS is not False:
+if STATUS is not False:
     usestatus = True
     tmp = STATUS.split(",")
     ACTIVITY_TYPE = tmp[0]

@@ -5,7 +5,7 @@ Executables will no longer be available in the repository, you can find them in 
 ### Now under new ownership! Owned by The Waffle and Fox Corp.
 
 ### Don't want to host this bot yourself and use a hosted one and want to stay up to date with all information related to this bot?
-> **Join our Discord server [here](https://discord.gg/XYNRDb6sAv)!**
+> **Join our Discord server [here](https://discord.gg/cy3Kn9MK7Z)!**
 
 ### DISCLAIMER: WE DO NOT TAKE ANY RESPONSIBILITY FOR ANY GRIEF CAUSED BY USING THIS BOT.
 **YOU are responsible if you use this bot to nuke a Discord server.**

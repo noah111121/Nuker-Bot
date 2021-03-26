@@ -17,8 +17,7 @@ Executables will no longer be available in the repository, you can find them in 
 ### Shortcuts:
 [Usage](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#usage) |
 [Installation](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#installation) |
-[Setup](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#setup) |
-[Configuration](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#configuration) 
+[Setup](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#setup)
 
 [Changelog](https://github.com/KingWaffleIII/Nuker-Bot/blob/main/CHANGELOG.md) |
 [Releases](https://github.com/KingWaffleIII/Nuker-Bot/releases)

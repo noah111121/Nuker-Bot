@@ -27,8 +27,11 @@ def firsttimesetup():
         statustext = input("Please enter the text for your status: ")
         fullstatus = f"{statustype},{statustext}"
     else: fullstatus = False
+
+    if input("Would you like logging to be turned on? (Y/N): ").lower() == "y": logtoggle = True
+    else: logtoggle = False
     
-    towrite = dumps({"TOKEN": tok, "USERID": uid, "PREFIX": pre, "STATUS": fullstatus, "LOGFILE": "nuker_bot_log.txt", "ROLE_IDS": {}})
+    towrite = dumps({"TOKEN": tok, "USERID": uid, "PREFIX": pre, "STATUS": fullstatus, "LOG": logtoggle, "LOGFILE": "nuker_bot_log.txt", "ROLE_IDS": {}})
     
     file = open("settings.json", "w+")
     file.write(towrite)
@@ -45,6 +48,7 @@ TOKEN = settings["TOKEN"]
 USER_ID = settings["USERID"]
 PREFIX = settings["PREFIX"]
 STATUS = settings["STATUS"]
+LOG = settings["LOG"]
 LOGFILE = settings["LOGFILE"]
 
 # parse the STATUS var
@@ -116,9 +120,10 @@ def writeRoleIDs(write):
 
 # logging function
 def output_log(text):
-    with open(LOGFILE, "a+") as f:
-        f.write("\n  ".join((datetime.now().strftime("%d/%m/%Y %H:%M:%S\n")+text.removeprefix("\n")).splitlines())+"\n\n")
-        f.close()
+    if LOG:
+        with open(LOGFILE, "a+") as f:
+            f.write("\n  ".join((datetime.now().strftime("%d/%m/%Y %H:%M:%S\n")+text.removeprefix("\n")).splitlines())+"\n\n")
+            f.close()
 
 
 # nuking functions
@@ -270,7 +275,7 @@ async def on_ready():
     for guild in bot.guilds:
         print(guild.name)
 
-    print(f"Logging in \"{LOGFILE}\"")
+    if LOG: print(f"Logging in \"{LOGFILE}\"")
 
 
 # outputs to the log some basic info about the new guild when connected

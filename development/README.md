@@ -1,9 +1,7 @@
 # Nuker Bot - dev section
 **If you're not after a pre-release, please head to the [main branch](https://github.com/KingWaffleIII/Nuker-Bot/tree/main)!**
 
-## Latest Pre-Release Version: N/A
 ### This section contains the pre-release versions; some features may be unstable or not work at all!
-**Last STABLE version: v1.5**
 
 **Here are the pre-release which is created when enough of the planned features are stable. It is available but I don't recommend you do unless you're feeling a little risky since many features can be unstable or broken.**
 

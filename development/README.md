@@ -1,5 +1,5 @@
 # Nuker Bot - dev section
-**If you're not after a pre-release, please head to the [main branch](https://github.com/KingWaffleIII/Nuker-Bot/tree/main)!**
+**If you're not after a pre-release, please head to the [main branch](https://github.com/The-Waffle-and-Fox-Corporation/Nuker-Bot/tree/main)!**
 
 ### This section contains the pre-release versions; some features may be unstable or not work at all!
 
@@ -11,4 +11,4 @@
 **You may find requests and fixes from pull requests, issues, etc. in these versions.**
 **All pre-release version will be officially released on the releases page but only Python files will be available.**
 
-You can find planned changes [here](https://github.com/KingWaffleIII/Nuker-Bot/blob/main/CHANGELOG.md)
+You can find planned changes [here](https://github.com/The-Waffle-and-Fox-Corporation/Nuker-Bot/blob/main/CHANGELOG.md)

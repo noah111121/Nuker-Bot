@@ -1,7 +1,7 @@
 # Nuker Bot
 
 ## Latest stable version: v1.8
-Executables will no longer be available in the repository, you can find them in the [releases page](https://github.com/KingWaffleIII/Nuker-Bot/releases).
+Executables will no longer be available in the repository, you can find them in the [releases page](https://github.com/The-Waffle-and-Fox-Corporation/Nuker-Bot/releases).
 ### Now under new ownership! Owned by The Waffle and Fox Corp.
 
 ### Don't want to host this bot yourself and use a hosted one and want to stay up to date with all information related to this bot?
@@ -14,12 +14,12 @@ Executables will no longer be available in the repository, you can find them in 
 **WE do not recommend using this on a community server and any griefs will stay on your record.**
 
 ### Shortcuts:
-[Usage](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#usage) |
-[Installation](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#installation) |
-[Setup](https://github.com/KingWaffleIII/Nuker-Bot/tree/main#setup)
+[Usage](https://github.com/The-Waffle-and-Fox-Corporation/Nuker-Bot/tree/main#usage) |
+[Installation](https://github.com/The-Waffle-and-Fox-Corporation/Nuker-Bot/tree/main#installation) |
+[Setup](https://github.com/The-Waffle-and-Fox-Corporation/Nuker-Bot/tree/main#setup)
 
-[Changelog](https://github.com/KingWaffleIII/Nuker-Bot/blob/main/CHANGELOG.md) |
-[Releases](https://github.com/KingWaffleIII/Nuker-Bot/releases)
+[Changelog](https://github.com/The-Waffle-and-Fox-Corporation/Nuker-Bot/blob/main/CHANGELOG.md) |
+[Releases](https://github.com/The-Waffle-and-Fox-Corporation/Nuker-Bot/releases)
 
 ### *Why should you use a bot?* <br>
 **When nuking, you can either utilise administrator permissions and do it yourself, or you can use a bot. In my opinion, the latter is much better. Let's look at the pros and cons of each:**
@@ -84,4 +84,4 @@ Executables will no longer be available in the repository, you can find them in 
 ### Setup
 **Once you have done that, you need to create your bot application (essentially the bot's account) on the Discord development page. There is an excellent guide [here](https://discordpy.readthedocs.io/en/latest/discord.html) which outlines the steps on how to make your bot application. Please also make sure you enable PRIVILEGED INTENTS which you can do [here](https://discordpy.readthedocs.io/en/latest/intents.html#privileged-intents). 
 Once finished, you can run the bot, and complete the first time setup.
-Then you can invite the bot to whoever has annoyed you and you want to nuke and check the COMMANDS section to see what to do (https://github.com/KingWaffleIII/Nuker-Bot#commands-). Enjoy!**
+Then you can invite the bot to whoever has annoyed you and you want to nuke and check the COMMANDS section to see what to do (https://github.com/The-Waffle-and-Fox-Corporation/Nuker-Bot#commands-). Enjoy!**

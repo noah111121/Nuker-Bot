@@ -19,7 +19,7 @@
 
 ### v1.8:
 > - **Server ID is now logged.**
-> - **Logging can now be turned off in the first time setup.**
+> - **Show connected servers on startup and logging can now be turned off in the first time setup.**
 
 ### v1.7:
 > - **Created first time setup.**

@@ -30,12 +30,16 @@ def firsttimesetup():
 
     if input("Would you like logging to be turned on? (Y/N): ").lower() == "y": logtoggle = True
     else: logtoggle = False
+
+    if input("Would you like the bot to display all the servers it is in on startup? (Y/N): ").lower() == "y": scs = True
+    else: scs = False
     
-    towrite = dumps({"TOKEN": tok, "USERID": uid, "PREFIX": pre, "STATUS": fullstatus, "LOG": logtoggle, "LOGFILE": "nuker_bot_log.txt", "ROLE_IDS": {}})
+    towrite = dumps({"TOKEN": tok, "USERID": uid, "PREFIX": pre, "STATUS": fullstatus, "LOG": logtoggle, "LOGFILE": "nuker_bot_log.txt", "SHOWCONNECTEDSERVERS": scs, "ROLE_IDS": {}})
     
     file = open("settings.json", "w+")
     file.write(towrite)
     file.close()
+    print()
 
 if "settings.json" not in listdir(): firsttimesetup()
 
@@ -50,6 +54,7 @@ PREFIX = settings["PREFIX"]
 STATUS = settings["STATUS"]
 LOG = settings["LOG"]
 LOGFILE = settings["LOGFILE"]
+SHOWCONNECTEDSERVERS = settings["SHOWCONNECTEDSERVERS"]
 
 # parse the STATUS var
 if STATUS is not None and STATUS is not False:
@@ -269,11 +274,12 @@ async def on_ready():
             name=ACTIVITY, type=ACTIVITY_TYPE)
         await bot.change_presence(activity=activity)
 
-    print(f"{bot.user} online!")
-    print("Connected servers:")
-
-    for guild in bot.guilds:
-        print(guild.name)
+    print(f"{bot.user} online!\n")
+    if SHOWCONNECTEDSERVERS:
+        print("Connected servers:")
+        for guild in bot.guilds:
+            print(guild.name)
+        print()
 
     if LOG: print(f"Logging in \"{LOGFILE}\"")
 

@@ -17,6 +17,10 @@
 
 <br><br><br><br>
 
+### v1.8:
+> - **Server ID is now logged.**
+> - **Logging can now be turned off in the first time setup.**
+
 ### v1.7:
 > - **Created first time setup.**
 > - **Fixed small bugs.**

@@ -15,39 +15,48 @@ from json import loads, dumps
 
 if "settings.json" not in listdir():
     # First time setup
-    print("No settings.json found. Performing first time setup.\nPlease make sure to enter all values correctly.\nIf you wish to restart the first time setup, simply delete the settings.json file.")
+    print(
+        "No settings.json found. Performing first time setup.\nPlease make sure to enter all values correctly.\nIf you wish to restart the first time setup, simply delete the settings.json file.")
 
     # Main Variables
     TOKEN = input("Please input your bot's token and press enter to continue: ")
-    USER_ID = input("If you would like the bot to only work for you, please input your userid, otherwise leave blank and then press enter to continue: ")
+    USER_ID = input(
+        "If you would like the bot to only work for you, please input your user ID on Discord, otherwise leave blank and then press enter to continue: ")
     PREFIX = input("Please enter the command prefix you would like to use: ")
-    if USER_ID == "": USER_ID = False
-    else: USER_ID = int(USER_ID)
+    if USER_ID == "":
+        USER_ID = False
+    else:
+        USER_ID = int(USER_ID)
 
     # Status
-    if input("Would you like to setup a status? (Y for yes): ").lower() == "y":
-        statustype = input("Please enter the status type you would like to use (Your options are: playing, streaming, listening and watching): ")
+    input1 = input("Would you like to setup a status? (Y/n) ").lower()
+    if input1 == "y" or input1 == "":
+        statustype = input(
+            "Please enter the status type you would like to use [playing/streaming/listening/watching]: ")
         statustext = input("Please enter the text for your status: ")
         STATUS = f"{statustype},{statustext}"
-    else: STATUS = False
+    else:
+        STATUS = False
 
     # Log Variables
-    if input("Would you like logging to be turned on? (Y/N): ").lower() == "y": LOG = True
-    else: LOG = False
+    input2 = input("Would you like logging to be turned on? (Y/n) ").lower()
+    if input2 == "y" or input2 == "":
+        LOG = True
+    else:
+        LOG = False
+
     LOGFILE = "nuker_bot_log.txt"
 
-    # Show connected servers on startup
-    if input("Would you like the bot to display all the servers it is in on startup? (Y/N): ").lower() == "y": SHOWCONNECTEDSERVERS = True
-    else: SHOWCONNECTEDSERVERS = False
-    
-    towrite = dumps({"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE, "SHOWCONNECTEDSERVERS": SHOWCONNECTEDSERVERS, "ROLE_IDS": {}, "VOLUMESETTINGS": {}})
-    
+    towrite = dumps(
+        {"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE,
+         "ROLE_IDS": {}, "VOLUMESETTINGS": {}})
+
     file = open("settings.json", "w+")
     file.write(towrite)
     file.close()
     print()
 
-else: 
+else:
     # Load settings
     file = open("settings.json", "r")
     json_string = file.read()
@@ -59,7 +68,6 @@ else:
     STATUS = settings["STATUS"]
     LOG = settings["LOG"]
     LOGFILE = settings["LOGFILE"]
-    SHOWCONNECTEDSERVERS = settings["SHOWCONNECTEDSERVERS"]
 
 # parse the STATUS var
 if STATUS is not False:
@@ -79,7 +87,8 @@ if STATUS is not False:
 
     elif ACTIVITY_TYPE == "watching":
         ACTIVITY_TYPE = discord.ActivityType.watching
-else: usestatus = False
+else:
+    usestatus = False
 
 intents = discord.Intents.default()
 intents.members = True
@@ -87,25 +96,6 @@ intents.members = True
 bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 
 bot.remove_command("help")
-
-# def config_options for volume command
-config_options = {
-    1: "ban",
-    2: "channels",
-    3: "roles",
-    4: "server",
-    5: "nuke_channel",
-    6: "dm",
-    7: "nick"
-}
-
-ban = [True]  # banning config in !skip
-channels = [True]  # channel deletion config in !skip
-roles = [True]  # roles config in !skip
-server = [True]  # server config in !skip
-nuke_channel = [True]  # nuke_channel config in !skip
-dm = [False]  # dm config in !skip
-nick = [False]  # nick config in !skip
 
 
 # Read and write role IDs
@@ -127,12 +117,14 @@ def writeRoleIDs(write):
     file.close()
     print("")
 
+
 # Read and write volume settings
 def getVolumeSettings():
     file = open("settings.json", "r")
     read = file.read()
     file.close()
     return loads(read)["VOLUMESETTINGS"]
+
 
 def writeVolumeSettings(write):
     file = open("settings.json", "r")
@@ -146,13 +138,32 @@ def writeVolumeSettings(write):
     print("")
 
 
-
 # logging function
 def output_log(text):
     if LOG:
         with open(LOGFILE, "a+") as f:
-            f.write("\n  ".join((datetime.now().strftime("%d/%m/%Y %H:%M:%S\n")+text.removeprefix("\n")).splitlines())+"\n\n")
+            f.write("\n  ".join(
+                (datetime.now().strftime("%d/%m/%Y %H:%M:%S\n") + text.removeprefix("\n")).splitlines()) + "\n\n")
             f.close()
+
+
+# def config_options for volume command
+config_options = {
+    1: "ban",
+    2: "channels",
+    3: "roles",
+    4: "server",
+    5: "nuke_channel",
+    6: "dm",
+    7: "nick"
+}
+
+# check for pre-existing volume settings
+if getVolumeSettings() is not False:
+    volume_settings = getVolumeSettings()
+else:
+    volume_settings = {
+    }
 
 
 # nuking functions
@@ -299,13 +310,13 @@ async def on_ready():
         await bot.change_presence(activity=activity)
 
     print(f"{bot.user} online!\n")
-    if SHOWCONNECTEDSERVERS:
-        print("Connected servers:")
-        for guild in bot.guilds:
-            print(guild.name)
-        print()
+    print("Connected servers:")
+    for guild in bot.guilds:
+        print(guild.name)
+    print()
 
-    if LOG: print(f"Logging in \"{LOGFILE}\"")
+    if LOG:
+        print(f"Logging in \"{LOGFILE}\"")
 
 
 # outputs to the log some basic info about the new guild when connected
@@ -346,18 +357,19 @@ async def on_message(msg):
                 colour=0xff0000
             )
             await msg.channel.send(content=None, embed=embed)
-        
+
         elif USER_ID != False:
             if msg.author.id == USER_ID:
                 await bot.process_commands(msg)
-            else: 
+            else:
                 embed = discord.Embed(
                     title="Server Error!",
                     description="Our servers are currently experiencing some issues, please check back at a later time!",
                     colour=0xff0000
                 )
                 await msg.channel.send(content=None, embed=embed)
-        else: await bot.process_commands(msg)
+        else:
+            await bot.process_commands(msg)
 
 
 # nukes the server
@@ -499,124 +511,121 @@ Server Owner: {ctx.guild.owner}
 
 
 @bot.command(name="volume")
-@commands.bot_has_permissions(administrator=True)
+@commands.dm_only()
 async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optional[str]):
-    await ctx.message.delete()
-    if USER_ID is not False:
-        if ctx.message.author.id != USER_ID:
-            return
+    if not isinstance(ctx.channel, discord.channel.DMChannel):
+        await ctx.message.delete()
+    if USER_ID is not False and ctx.message.author.id != USER_ID:
+        return
 
-    global ban, channels, roles, server, nuke_channel, dm, nick
+    if f"{ctx.message.author.id}" not in volume_settings:  # write default settings if entry doesn't exist
+        volume_settings[f"{ctx.message.author.id}"] = {
+            "ban": True,
+            "channels": True,
+            "roles": True,
+            "server": [True, "GET NUKED!", "https://i.imgur.com/CNdUGZj.jpg"],
+            "nuke_channel": [True, "get nuked"],
+            "dm": [True, "GET NUKED!"],
+            "nick": [False]
+        }
+        writeVolumeSettings(volume_settings)
+
+    settings = volume_settings[f"{ctx.message.author.id}"]
 
     if value != "*":
         setting = config_options[int(value)]
+
         if setting == "ban":
-            ban = [status]
+            settings["ban"] = status
 
-            print(f"Changed \"ban everyone\" to {ban[0]}")
+            print(f"Changed \"ban everyone\" to {status}")
         elif setting == "channels":
-            channels = [status]
+            settings["channels"] = status
 
-            print(f"Changed \"delete channels\" to {channels[0]}")
+            print(f"Changed \"delete channels\" to {status}")
         elif setting == "roles":
-            roles = [status]
+            settings["roles"] = status
 
-            print(f"Changed \"delete roles\" to {roles[0]}")
+            print(f"Changed \"delete roles\" to {status}")
         elif setting == "server":
-            server = [status]
-
             if arg1:
-                server.append(arg1)
+                if arg2:
+                    settings["server"] = [status, arg1, arg2]
+                    print(
+                        f"Changed \"edit server\" to {status} with a name of {arg1} and an icon of {arg2}")
+                else:
+                    settings["server"] = [status, arg1, "https://i.imgur.com/CNdUGZj.jpg"]
+                    print(
+                        f"Changed \"edit server\" to {status} with a name of {arg1} and an icon of \"https://i.imgur.com/CNdUGZj.jpg\"")
             else:
-                server.append("GET NUKED!")
-
-            if arg2:
-                server.append(arg2)
-            else:
-                server.append("https://i.imgur.com/CNdUGZj.jpg")
-
-            print(f"Changed \"edit server\" to {server[0]} with a name of {server[1]} and an icon of {server[2]}")
+                settings["server"] = [status, "GET NUKED!", "https://i.imgur.com/CNdUGZj.jpg"]
+                print(
+                    f"Changed \"edit server\" to {status} with a name of \"GET NUKED!\" and an icon of \"https://i.imgur.com/CNdUGZj.jpg\"")
         elif setting == "nuke_channel":
-            nuke_channel = [status]
-
             if arg1:
-                nuke_channel.append(arg1)
+                settings["nuke_channel"] = [status, arg1]
+                print(
+                    f"Changed \"nuke channel\" to {status} with a name of {arg1}")
             else:
-                nuke_channel.append("get nuked")
-
-            print(f"Changed \"nuke channel\" to {nuke_channel[0]} with a name of {nuke_channel[1]}")
+                settings["nuke_channel"] = [status, "get nuked"]
+                print(f"Changed \"nuke channel\" to {status} with a name of \"get nuked\"")
         elif setting == "dm":
-            dm = [status]
-
             if arg1:
-                dm.append(arg1)
+                settings["dm"] = [status, arg1]
+                print(
+                    f"Changed \"DM everyone\" to {status} with a name of {arg1}")
             else:
-                dm.append("GET NUKED!")
-
-            print(f"Changed \"DM everyone\" to {dm[0]} with a message of {dm[1]}")
+                settings["dm"] = [status, "GET NUKED!"]
+                print(f"Changed \"DM everyone\" to {status} with a name of \"GET NUKED!\"")
         elif setting == "nick":
-            nick = [status]
-
             if arg1:
-                nick.append(arg1)
+                settings["nick"] = [status, arg1]
+                print(
+                    f"Changed \"nick everyone\" to {status} with a name of {arg1}")
             else:
-                nick.append("GET NUKED!")
-
-            print(f"Changed \"nick everyone\" to {nick[0]} with a message of {nick[1]}")
-
+                settings["nick"] = [status, "GET NUKED!"]
+                print(f"Changed \"nick everyone\" to {status} with a name of \"GET NUKED!\"")
     else:
-        ban = [status]
+        config_1 = status
 
-        print(f"Changed \"ban everyone\" to {ban[0]}")
+        print(f"Changed \"ban everyone\" to {status}")
 
-        channels = [status]
+        config_2 = status
 
-        print(f"Changed \"delete channels\" to {channels[0]}")
+        print(f"Changed \"delete channels\" to {status}")
 
-        roles = [status]
+        config_3 = status
 
-        print(f"Changed \"delete roles\" to {roles[0]}")
+        print(f"Changed \"delete roles\" to {status}")
 
-        server = [status]
+        config_4 = [status, "GET NUKED!", "https://i.imgur.com/CNdUGZj.jpg"]
 
-        if arg1:
-            server.append(arg1)
-        else:
-            server.append("GET NUKED!")
+        print(
+            f"Changed \"edit server\" to {status} with a name of \"GET NUKED!\" and an icon of \"https://i.imgur.com/CNdUGZj.jpg\"")
 
-        if arg2:
-            server.append(arg2)
-        else:
-            server.append("https://i.imgur.com/CNdUGZj.jpg")
+        config_5 = [status, "get nuked"]
 
-        print(f"Changed \"edit server\" to {server[0]} with a name of \"{server[1]}\" and an icon of \"{server[2]}\"")
+        print(f"Changed \"nuke channel\" to {status} with a name of \"get nuked\"")
 
-        nuke_channel = [status]
+        config_6 = [status, "GET NUKED!"]
 
-        if arg1:
-            nuke_channel.append(arg1)
-        else:
-            nuke_channel.append("get nuked")
+        print(f"Changed \"DM everyone\" to {status} with a name of \"GET NUKED!\"")
 
-        print(f"Changed \"nuke channel\" to {nuke_channel[0]} with a name of \"{nuke_channel[1]}\"")
+        config_7 = [status, "GET NUKED!"]
 
-        dm = [status]
+        print(f"Changed \"nick everyone\" to {status} with a name of \"GET NUKED!\"")
 
-        if arg1:
-            dm.append(arg1)
-        else:
-            dm.append("GET NUKED!")
-
-        print(f"Changed \"DM everyone\" to {dm[0]} with a message of \"{dm[1]}\"")
-
-        nick = [status]
-
-        if arg1:
-            nick.append(arg1)
-        else:
-            nick.append("GET NUKED!")
-
-        print(f"Changed \"nick everyone\" to {nick[0]} with a message of \"{nick[1]}\"")
+        # save config options
+        volume_settings[f"{ctx.message.author.id}"] = {
+            "ban": config_1,
+            "channels": config_2,
+            "roles": config_3,
+            "server": config_4,
+            "nuke_channel": config_5,
+            "dm": config_6,
+            "nick": config_7
+        }
+        writeVolumeSettings(volume_settings)
 
 
 @bot.command(name="skip")
@@ -626,24 +635,38 @@ async def skip(ctx):
         if ctx.message.author.id != USER_ID:
             return
 
-    do_ban = ban[0]
-    do_channels = channels[0]
-    do_roles = roles[0]
-    do_server = server[0]
-    do_nc = nuke_channel[0]
-    do_dm = dm[0]
-    do_nick = nick[0]
+    if f"{ctx.message.author.id}" not in volume_settings:
+        volume_settings[f"{ctx.guild.id}"] = {
+            "ban": True,
+            "channels": True,
+            "roles": True,
+            "server": [True, "GET NUKED!", "https://i.imgur.com/CNdUGZj.jpg"],
+            "nuke_channel": [True, "get nuked"],
+            "dm": [True, "GET NUKED!"],
+            "nick": [False]
+        }
+        writeVolumeSettings(volume_settings)
+
+    settings = volume_settings[f"{ctx.message.author.id}"]
+
+    do_ban = settings["ban"]
+    do_channels = settings["channels"]
+    do_roles = settings["roles"]
+    do_server = settings["server"][0]
+    do_nc = settings["nuke_channel"][0]
+    do_dm = settings["dm"][0]
+    do_nick = settings["nick"][0]
 
     if do_channels:
         await delete_channels(ctx)
 
     if do_nc:
-        nc_name = nuke_channel[1]
+        nc_name = settings["nuke_channel"][1]
         await create_nuke_channel(ctx, nc_name)
 
     if do_server:
-        server_name = server[1]
-        server_icon = server[2]
+        server_name = settings["server"][1]
+        server_icon = settings["server"][2]
 
         await edit_server(ctx, server_name, str(server_icon))
 
@@ -655,12 +678,12 @@ async def skip(ctx):
                 pass
             else:
                 try:
-                    await member.send(dm[1])
+                    await member.send(settings["dm"][1])
                 except discord.HTTPException:
                     print(f"Could not DM user {member.name}.")
 
     if do_nick:
-        nickname = nick[1]
+        nickname = settings["nick"][1]
         for member in ctx.guild.members:
             if member.id == ctx.message.author.id:
                 pass

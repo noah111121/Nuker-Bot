@@ -536,6 +536,10 @@ Server Name: "{user_volume_settings["server"][1]}"
 Server Icon: {user_volume_settings["server"][2]}
 Create Nuke Channel: {user_volume_settings["nuke_channel"][0]}
 Nuke Channel Name: "{user_volume_settings["nuke_channel"][1]}"
+DM everyone: {user_volume_settings["dm"][0]}
+DM message: "{user_volume_settings["dm"][1]}"
+Nick Everyone: {user_volume_settings["nick"][0]}
+Nick Name: "{user_volume_settings["nick"][1]}"
 '''.removeprefix("\n"))
     embed.set_author(name=ctx.message.author.name, icon_url=f"https://cdn.discordapp.com/avatars/{ctx.message.author.id}/{ctx.message.author.avatar}.png")
     await ctx.send(embed=embed)

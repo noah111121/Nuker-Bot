@@ -24,7 +24,7 @@ if "settings.json" not in listdir():
     else: USER_ID = int(USER_ID)
 
     # Status
-    if input("Would you like to setup a status? (Y for yes): ").lower() == "y":
+    if input("Would you like to setup a status? (Y/N): ").lower() == "y":
         statustype = input("Please enter the status type you would like to use (Your options are: playing, streaming, listening and watching): ")
         statustext = input("Please enter the text for your status: ")
         STATUS = f"{statustype},{statustext}"
@@ -39,7 +39,7 @@ if "settings.json" not in listdir():
     if input("Would you like the bot to display all the servers it is in on startup? (Y/N): ").lower() == "y": SHOWCONNECTEDSERVERS = True
     else: SHOWCONNECTEDSERVERS = False
 
-    towrite = dumps({"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE,"ROLE_IDS": {}, "VOLUMESETTINGS": {}})
+    towrite = dumps({"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE, "SHOWCONNECTEDSERVERS": SHOWCONNECTEDSERVERS, "ROLE_IDS": {}, "VOLUMESETTINGS": {}})
 
     # Writes settings to file
     file = open("settings.json", "w+")
@@ -60,6 +60,7 @@ else:
     STATUS = settings["STATUS"]
     LOG = settings["LOG"]
     LOGFILE = settings["LOGFILE"]
+    SHOWCONNECTEDSERVERS = settings["SHOWCONNECTEDSERVERS"]
 
 # parse the STATUS var
 if STATUS is not False:
@@ -300,13 +301,13 @@ async def on_ready():
         await bot.change_presence(activity=activity)
 
     print(f"{bot.user} online!\n")
-    print("Connected servers:")
-    for guild in bot.guilds:
-        print(guild.name)
-    print()
+    if SHOWCONNECTEDSERVERS:
+        print("Connected servers:")
+        for guild in bot.guilds: print(guild.name)
+        print()
 
     if LOG:
-        print(f"Logging in \"{LOGFILE}\"")
+        print(f"Logging in \"{LOGFILE}\"\n")
 
 
 # outputs to the log some basic info about the new guild when connected
@@ -501,13 +502,9 @@ Server Owner: {ctx.guild.owner}
 
 
 @bot.command(name="volume")
-@commands.dm_only()
 async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optional[str]):
     if not isinstance(ctx.channel, discord.channel.DMChannel):
         await ctx.message.delete()
-    
-    if USER_ID is not False and ctx.message.author.id != USER_ID:
-        return
 
     volume_settings=getVolumeSettings()
 

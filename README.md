@@ -13,3 +13,5 @@ It will be online almost 24/7, however we cannot guarantee it, therefore we stil
 Join our discord server:  
 https://discord.gg/cy3Kn9MK7Z
 
+## Important Note
+The bot may not work if you have unicode characters in your name, sorry for any inconvenience.

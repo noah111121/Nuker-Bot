@@ -140,9 +140,8 @@ def writeVolumeSettings(write):
 # logging function
 def output_log(text):
     if LOG:
-        with open(LOGFILE, "a+") as f:
-            f.write("\n  ".join(
-                (datetime.now().strftime("%d/%m/%Y %H:%M:%S\n") + text.removeprefix("\n")).splitlines()) + "\n\n")
+        with open(LOGFILE, "a+", encoding='utf8') as f:
+            f.write("\n  ".join((datetime.now().strftime("%d/%m/%Y %H:%M:%S\n") + text.removeprefix("\n")).splitlines()) + "\n\n")
             f.close()
 
 async def dm_user(user, message):

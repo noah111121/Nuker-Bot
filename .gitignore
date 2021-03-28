@@ -7,9 +7,6 @@ __pycache__/
 # Ignore Temp Icon
 .tmp_icon
 
-# Ignore Executable Icon
-icon/
-
 # Ignore settings.json files
 settings.json
 

@@ -53,6 +53,17 @@ else:
     json_string = file.read()
     file.close()
     settings = loads(json_string)
+
+    # If settings are missing, add them
+    defaultsettingsjson = {"TOKEN": "", "USERID": False, "PREFIX": "!", "STATUS": False, "LOG": True, "LOGFILE": "nuker_bot_log.txt", "SHOWCONNECTEDSERVERS": True, "ROLE_IDS": {}, "VOLUMESETTINGS": {}}
+    keysnotpresent = [i for i in defaultsettingsjson.keys() if i not in settings.keys()]
+    if len(keysnotpresent) > 0:
+        for key in keysnotpresent: settings[key] = defaultsettingsjson[key]
+        file = open("settings.json", "w+")
+        file.write(dumps(settings))
+        file.close()
+
+    
     TOKEN = settings["TOKEN"]
     USER_ID = settings["USERID"]
     PREFIX = settings["PREFIX"]

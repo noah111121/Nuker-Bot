@@ -310,7 +310,7 @@ async def on_ready():
 
     print(f"{bot.user} online!\n")
     if SHOWCONNECTEDSERVERS:
-        print("Connected servers:")
+        print(f"Connected servers ({len(bot.guilds)}):")
         for guild in bot.guilds: print(guild.name)
         print()
 

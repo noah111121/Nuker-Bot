@@ -62,7 +62,6 @@ else:
         file = open("settings.json", "w+")
         file.write(dumps(settings))
         file.close()
-
     
     TOKEN = settings["TOKEN"]
     USER_ID = settings["USERID"]
@@ -547,7 +546,7 @@ async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optio
         await ctx.message.delete()
 
     volume_settings=getVolumeSettings()
-
+    
     if f"{ctx.message.author.id}" not in volume_settings.keys():  # write default settings if entry doesn't exist
         volume_settings[f"{ctx.message.author.id}"] = {
             "ban": True,
@@ -559,54 +558,94 @@ async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optio
             "nick": [False, ""]
         }
         writeVolumeSettings(volume_settings)
-
+    
     settings = volume_settings[f"{ctx.message.author.id}"]
-    setting = config_options[int(value)]
 
-    if setting == "ban":
-        settings["ban"] = status
+    if value != "*":
+        setting = config_options[int(value)]
+        if setting == "ban":
+            settings["ban"] = status
+            await dm_user(ctx.message.author, f"Changed \"ban everyone\" to {status}")
+        elif setting == "channels":
+            settings["channels"] = status
 
-        await dm_user(ctx.message.author, f"Changed \"ban everyone\" to {status}")
-    elif setting == "channels":
-        settings["channels"] = status
+            await dm_user(ctx.message.author, f"Changed \"delete channels\" to {status}")
+        elif setting == "roles":
+            settings["roles"] = status
 
-        await dm_user(ctx.message.author, f"Changed \"delete channels\" to {status}")
-    elif setting == "roles":
-        settings["roles"] = status
-
-        await dm_user(ctx.message.author, f"Changed \"delete roles\" to {status}")
-    elif setting == "server":
-        if arg1:
-            if arg2:
-                settings["server"] = [status, arg1, arg2]
-                await dm_user(ctx.message.author, f"Changed \"edit server\" to {status} with a name of {arg1} and an icon of {arg2}")
+            await dm_user(ctx.message.author, f"Changed \"delete roles\" to {status}")
+        elif setting == "server":
+            if arg1:
+                if arg2:
+                    settings["server"] = [status, arg1, arg2]
+                    await dm_user(ctx.message.author, f"Changed \"edit server\" to {status} with a name of {arg1} and an icon of {arg2}")
+                else:
+                    settings["server"] = [status, arg1, "https://i.imgur.com/CNdUGZj.jpg"]
+                    await dm_user(ctx.message.author, f"Changed \"edit server\" to {status} with a name of {arg1} and an icon of https://i.imgur.com/CNdUGZj.jpg")
             else:
-                settings["server"] = [status, arg1, "https://i.imgur.com/CNdUGZj.jpg"]
-                await dm_user(ctx.message.author, f"Changed \"edit server\" to {status} with a name of {arg1} and an icon of \"https://i.imgur.com/CNdUGZj.jpg\"")
-        else:
-            settings["server"] = [status, "GET NUKED!", "https://i.imgur.com/CNdUGZj.jpg"]
-            await dm_user(ctx.message.author, f"Changed \"edit server\" to {status} with a name of \"GET NUKED!\" and an icon of \"https://i.imgur.com/CNdUGZj.jpg\"")
-    elif setting == "nuke_channel":
-        if arg1:
-            settings["nuke_channel"] = [status, arg1]
-            await dm_user(ctx.message.author, f"Changed \"nuke channel\" to {status} with a name of {arg1}")
-        else:
-            settings["nuke_channel"] = [status, "get nuked"]
-            await dm_user(ctx.message.author, f"Changed \"nuke channel\" to {status} with a name of \"get nuked\"")
-    elif setting == "dm":
-        if arg1:
-            settings["dm"] = [status, arg1]
-            await dm_user(ctx.message.author, f"Changed \"DM everyone\" to {status} with a message of {arg1}")
-        else:
-            settings["dm"] = [status, "GET NUKED!"]
-            await dm_user(ctx.message.author, f"Changed \"DM everyone\" to {status} with a message of \"GET NUKED!\"")
-    elif setting == "nick":
-        if arg1:
-            settings["nick"] = [status, arg1]
-            await dm_user(ctx.message.author, f"Changed \"nick everyone\" to {status} with a name of {arg1}")
-        else:
-            settings["nick"] = [status, "GET NUKED!"]
-            await dm_user(ctx.message.author, f"Changed \"nick everyone\" to {status} with a name of \"GET NUKED!\"")
+                settings["server"] = [status, "GET NUKED!", "https://i.imgur.com/CNdUGZj.jpg"]
+                await dm_user(ctx.message.author, f"Changed \"edit server\" to {status} with a name of \"GET NUKED!\" and an icon of https://i.imgur.com/CNdUGZj.jpg")
+        elif setting == "nuke_channel":
+            if arg1:
+                settings["nuke_channel"] = [status, arg1]
+                await dm_user(ctx.message.author, f"Changed \"nuke channel\" to {status} with a name of {arg1}")
+            else:
+                settings["nuke_channel"] = [status, "get nuked"]
+                await dm_user(ctx.message.author, f"Changed \"nuke channel\" to {status} with a name of \"get nuked\"")
+        elif setting == "dm":
+            if arg1:
+                settings["dm"] = [status, arg1]
+                await dm_user(ctx.message.author, f"Changed \"DM everyone\" to {status} with a message of {arg1}")
+            else:
+                settings["dm"] = [status, "GET NUKED!"]
+                await dm_user(ctx.message.author, f"Changed \"DM everyone\" to {status} with a message of \"GET NUKED!\"")
+        elif setting == "nick":
+            if arg1:
+                settings["nick"] = [status, arg1]
+                await dm_user(ctx.message.author, f"Changed \"nick everyone\" to {status} with a name of {arg1}")
+            else:
+                settings["nick"] = [status, "GET NUKED!"]
+                await dm_user(ctx.message.author, f"Changed \"nick everyone\" to {status} with a name of \"GET NUKED!\"")
+    else:
+        lines = []
+        config_1 = status
+        lines.append(f"Changed \"ban everyone\" to {status}")
+
+        config_2 = status
+
+        lines.append(f"Changed \"delete channels\" to {status}")
+
+        config_3 = status
+
+        lines.append(f"Changed \"delete roles\" to {status}")
+
+        config_4 = [status, "GET NUKED!", "https://i.imgur.com/CNdUGZj.jpg"]
+
+        lines.append(f"Changed \"edit server\" to {status} with a name of \"GET NUKED!\" and an icon of https://i.imgur.com/CNdUGZj.jpg")
+
+        config_5 = [status, "get nuked"]
+
+        lines.append(f"Changed \"nuke channel\" to {status} with a name of \"get nuked\"")
+
+        config_6 = [status, "GET NUKED!"]
+
+        lines.append(f"Changed \"DM everyone\" to {status} with a message of \"GET NUKED!\"")
+
+        config_7 = [status, "GET NUKED!"]
+
+        lines.append(f"Changed \"nick everyone\" to {status} with a name of \"GET NUKED!\"")
+
+        # save config options
+        volume_settings[f"{ctx.message.author.id}"] = {
+            "ban": config_1,
+            "channels": config_2,
+            "roles": config_3,
+            "server": config_4,
+            "nuke_channel": config_5,
+            "dm": config_6,
+            "nick": config_7
+        }
+        await dm_user(ctx.message.author, "\n".join(lines))
     writeVolumeSettings(volume_settings)
 
 

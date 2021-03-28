@@ -2,11 +2,12 @@
 __pycache__/
 
 # Ignore Logs
-logs
 *.txt
 
-# Ignore Icon
+# Ignore Temp Icon
 .tmp_icon
+
+# Ignore Executable Icon
 icon/
 
 # Ignore settings.json files

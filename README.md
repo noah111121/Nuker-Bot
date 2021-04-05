@@ -4,9 +4,8 @@
 
 **Welcome to The Waffle and Fox Corporation's Nuker Bot repository. Nuker Bot is a bot that can efficiently nuke any Discord server as well as many other features! Interested? Check the [Wiki](https://github.com/The-Waffle-and-Fox-Corporation/Nuker-Bot/wiki) for more information!**
 
-### Autoupdater
-Automatically keeps a TWAF Corp Nuker Bot updated to the latest version.  
-https://github.com/The-Waffle-and-Fox-Corporation/Nuker-Bot-Autoupdater
+### Feature Ideas
+If you have an idea for a feature, please either put it as an issue, or join our discord server and tell us there!
 
 ### Groovy Premium
 Don't want to host one yourself? We host one disguised as "Groovy Premium".  
@@ -16,3 +15,7 @@ It will be online almost 24/7, however we cannot guarantee it, therefore we stil
 ### Need assistance?
 Join The Waffle and Fox Corp. Discord server:  
 https://discord.gg/cy3Kn9MK7Z
+
+### Autoupdater
+Automatically keeps a TWAF Corp Nuker Bot updated to the latest version.  
+https://github.com/The-Waffle-and-Fox-Corporation/Nuker-Bot-Autoupdater

@@ -1,6 +1,6 @@
 # Made by KingWaffleIII and QuantumFox42
 # Nuker Bot
-# v1.15b
+# v1.15
 
 import discord
 from discord.ext import commands
@@ -38,7 +38,10 @@ if "settings.json" not in listdir():
     # Show connected servers on startup
     SHOWCONNECTEDSERVERS = True
 
-    towrite = dumps({"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE, "SHOWCONNECTEDSERVERS": SHOWCONNECTEDSERVERS, "NUCLEARBUNKERS": [], "ROLE_IDS": {}, "VOLUMESETTINGS": {}})
+    #NUCLEARBUNKERS
+    NUCLEARBUNKERS = []
+
+    towrite = dumps({"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE, "SHOWCONNECTEDSERVERS": SHOWCONNECTEDSERVERS, "NUCLEARBUNKERS": NUCLEARBUNKERS, "ROLE_IDS": {}, "VOLUMESETTINGS": {}})
 
     # Writes settings to file
     file = open("settings.json", "w+")

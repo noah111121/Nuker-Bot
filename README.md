@@ -18,7 +18,3 @@ It will be online almost 24/7, however we cannot guarantee it, therefore we stil
 ### Need assistance?
 Join The Waffle and Fox Corp. Discord server:  
 https://discord.gg/cy3Kn9MK7Z
-
-### Autoupdater
-Automatically keeps a TWAF Corp Nuker Bot updated to the latest version.  
-https://github.com/The-Waffle-and-Fox-Corporation/Nuker-Bot-Autoupdater

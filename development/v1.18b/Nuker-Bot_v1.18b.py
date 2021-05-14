@@ -12,7 +12,7 @@ from time import sleep
 from typing import Optional
 from json import loads, dumps
 
-version = "v1.17"
+version = "v1.18"
 
 commandaliases = {
     "nuke": ["help"],
@@ -401,12 +401,15 @@ async def on_message(msg):
 
         cmds = []
 
+        # Add main commands to commands list
         for command in bot.commands:
             cmds.append(str(command))
 
+        # Add command aliases to commands list
         for i in [commandaliases[command] for command in commandaliases]:
             cmds.extend(i)
 
+        # If message is not a correct command
         if not msg.content.lower().split(" ")[0][1:] in cmds:
             embed = discord.Embed(
                 title="Server Error!",

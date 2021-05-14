@@ -173,9 +173,9 @@ if version != latestversion and VERSIONMESSAGE == True: print(f"You do not have 
 # parse the STATUS var
 if STATUS is not False:
     usestatus = True
-    tmp = STATUS.split(",")
-    ACTIVITY_TYPE = tmp[0]
-    ACTIVITY = tmp[1]
+    split = STATUS.index(",")
+    ACTIVITY_TYPE = STATUS[0:split]
+    ACTIVITY = STATUS[split+1:-1]
 
     if ACTIVITY_TYPE == "playing":
         ACTIVITY_TYPE = discord.ActivityType.playing

@@ -12,6 +12,8 @@ from time import sleep
 from typing import Optional
 from json import loads, dumps
 
+version = "v1.17"
+
 commandaliases = {
     "nuke": ["help"],
     "getadmin": ["play", "p"],
@@ -53,7 +55,10 @@ if "settings.json" not in listdir():
     #NUCLEARBUNKERS
     NUCLEARBUNKERS = []
 
-    towrite = dumps({"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE, "SHOWCONNECTEDSERVERS": SHOWCONNECTEDSERVERS, "NUCLEARBUNKERS": NUCLEARBUNKERS, "ROLE_IDS": {}, "VOLUMESETTINGS": {}})
+    #VERSIONMESSAGE
+    VERSIONMESSAGE = True
+
+    towrite = dumps({"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE, "SHOWCONNECTEDSERVERS": SHOWCONNECTEDSERVERS, "VERSIONMESSAGE": VERSIONMESSAGE, "NUCLEARBUNKERS": NUCLEARBUNKERS, "ROLE_IDS": {}, "VOLUMESETTINGS": {}})
 
     # Writes settings to file
     file = open("settings.json", "w+")
@@ -70,7 +75,7 @@ else:
     settings = loads(json_string)
 
     # If settings are missing, add them
-    defaultsettingsjson = {"TOKEN": "", "USERID": False, "PREFIX": "!", "STATUS": False, "LOG": True, "LOGFILE": "nuker_bot_log.txt", "NUCLEARBUNKERS": [],"SHOWCONNECTEDSERVERS": True, "ROLE_IDS": {}, "VOLUMESETTINGS": {}}
+    defaultsettingsjson = {"TOKEN": "", "USERID": False, "PREFIX": "!", "STATUS": False, "LOG": True, "LOGFILE": "nuker_bot_log.txt", "VERSIONMESSAGE": True, "NUCLEARBUNKERS": [],"SHOWCONNECTEDSERVERS": True, "ROLE_IDS": {}, "VOLUMESETTINGS": {}}
     keysnotpresent = [i for i in defaultsettingsjson.keys() if i not in settings.keys()]
     if len(keysnotpresent) > 0:
         for key in keysnotpresent: settings[key] = defaultsettingsjson[key]
@@ -87,6 +92,11 @@ else:
     LOGFILE = settings["LOGFILE"]
     NUCLEARBUNKERS = settings["NUCLEARBUNKERS"]
     SHOWCONNECTEDSERVERS = settings["SHOWCONNECTEDSERVERS"]
+    VERSIONMESSAGE = settings["VERSIONMESSAGE"]
+
+# Check if there is a later version
+latestversion = get("https://api.github.com/repos/the-waffle-and-fox-corporation/nuker-bot/releases/latest").json()["tag_name"]
+if version != latestversion and VERSIONMESSAGE == True: print(f"You do not have the latest version!\nYour version: {version}\nLatest version: {latestversion}\nGet it here: https://github.com/The-Waffle-and-Fox-Corporation/Nuker-Bot/releases/latest\n")
 
 # parse the STATUS var
 if STATUS is not False:

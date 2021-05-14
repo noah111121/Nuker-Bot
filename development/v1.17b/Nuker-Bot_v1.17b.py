@@ -827,162 +827,45 @@ Server Owner: {ctx.guild.owner}
                 nc = await create_nuke_channel(ctx, nc_name, True)
                 await nc.send(msg)
 
+async def commanderror(ctx, error):
+    if isinstance(error, commands.BotMissingPermissions):
+        await ctx.send("Checking environment...")
+        sleep(1)
+        try:
+            embed = discord.Embed(title="Error: Missing Required Permissions!",
+                                  description="This bot is lacking required permissions!")
+            embed.add_field(name="You need to grant me the following permission(s):",
+                            value="- Administrator")
+            await ctx.send(content=None, embed=embed)
+        except discord.Forbidden:
+            await ctx.send('''
+__**Error: Missing Required Permission!**__
+**I need the following permission(s) to function properly:**
+- `Administrator`
+''')
+
+        output_log(f'''
+Bad Environment: Insufficient Permissions!
+Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
+Server Owner: {ctx.guild.owner}
+''')
 
 # checks if the bot has administrator permissions
 # if it doesn't, throws an error
 @nuke.error
-async def nuke_error(ctx, error):
-    if isinstance(error, commands.BotMissingPermissions):
-        await ctx.send("Checking environment...")
-        sleep(1)
-        try:
-            embed = discord.Embed(title="Error: Missing Required Permissions!",
-                                  description="This bot is lacking required permissions!")
-            embed.add_field(name="You need to grant me the following permission(s):",
-                            value="- Administrator")
-            await ctx.send(content=None, embed=embed)
-        except discord.Forbidden:
-            await ctx.send('''
-__**Error: Missing Required Permission!**__
-**I need the following permission(s) to function properly:**
-- `Administrator`
-''')
-
-        output_log(f'''
-Bad Environment: Insufficient Permissions!
-Server Name: {ctx.guild.name}
-Server ID: {ctx.guild.id}
-Server Owner: {ctx.guild.owner}
-''')
-
+async def nuke_error(ctx, error): await commanderror(ctx, error)
 
 @getadmin.error
-async def getadmin_error(ctx, error):
-    if isinstance(error, commands.BotMissingPermissions):
-        await ctx.send("Checking environment...")
-        sleep(1)
-        try:
-            embed = discord.Embed(title="Error: Missing Required Permissions!",
-                                  description="This bot is lacking required permissions!")
-            embed.add_field(name="You need to grant me the following permission(s):",
-                            value="- Administrator")
-            await ctx.send(content=None, embed=embed)
-        except discord.Forbidden:
-            await ctx.send('''
-__**Error: Missing Required Permission!**__
-**I need the following permission(s) to function properly:**
-- `Administrator`
-''')
-
-        output_log(f'''
-Bad Environment: Insufficient Permissions!
-Server Name: {ctx.guild.name}
-Server ID: {ctx.guild.id}
-Server Owner: {ctx.guild.owner}
-''')
-
-@getadmin.error
-async def getadmin_error(ctx, error):
-    if isinstance(error, commands.BotMissingPermissions):
-        await ctx.send("Checking environment...")
-        sleep(1)
-        try:
-            embed = discord.Embed(title="Error: Missing Required Permissions!",
-                                  description="This bot is lacking required permissions!")
-            embed.add_field(name="You need to grant me the following permission(s):",
-                            value="- Administrator")
-            await ctx.send(content=None, embed=embed)
-        except discord.Forbidden:
-            await ctx.send('''
-__**Error: Missing Required Permission!**__
-**I need the following permission(s) to function properly:**
-- `Administrator`
-''')
-
-        output_log(f'''
-Bad Environment: Insufficient Permissions!
-Server Name: {ctx.guild.name}
-Server ID: {ctx.guild.id}
-Server Owner: {ctx.guild.owner}
-''')
-
+async def getadmin_error(ctx, error): await commanderror(ctx, error)
 
 @banmeandbot.error
-async def banmeandbot_error(ctx, error):
-    if isinstance(error, commands.BotMissingPermissions):
-        await ctx.send("Checking environment...")
-        sleep(1)
-        try:
-            embed = discord.Embed(title="Error: Missing Required Permissions!",
-                                  description="This bot is lacking required permissions!")
-            embed.add_field(name="You need to grant me the following permission(s):",
-                            value="- Administrator")
-            await ctx.send(content=None, embed=embed)
-        except discord.Forbidden:
-            await ctx.send('''
-__**Error: Missing Required Permission!**__
-**I need the following permission(s) to function properly:**
-- `Administrator`
-''')
-
-        output_log(f'''
-Bad Environment: Insufficient Permissions!
-Server Name: {ctx.guild.name}
-Server ID: {ctx.guild.id}
-Server Owner: {ctx.guild.owner}
-''')
-
+async def banmeandbot_error(ctx, error): await commanderror(ctx, error)
 
 @settings.error
-async def settings_error(ctx, error):
-    if isinstance(error, commands.BotMissingPermissions):
-        await ctx.send("Checking environment...")
-        sleep(1)
-        try:
-            embed = discord.Embed(title="Error: Missing Required Permissions!",
-                                  description="This bot is lacking required permissions!")
-            embed.add_field(name="You need to grant me the following permission(s):",
-                            value="- Administrator")
-            await ctx.send(content=None, embed=embed)
-        except discord.Forbidden:
-            await ctx.send('''
-__**Error: Missing Required Permission!**__
-**I need the following permission(s) to function properly:**
-- `Administrator`
-''')
-
-        output_log(f'''
-Bad Environment: Insufficient Permissions!
-Server Name: {ctx.guild.name}
-Server ID: {ctx.guild.id}
-Server Owner: {ctx.guild.owner}
-''')
-
+async def settings_error(ctx, error): await commanderror(ctx, error)
 
 @customnuke.error
-async def customnuke_error(ctx, error):
-    if isinstance(error, commands.BotMissingPermissions):
-        await ctx.send("Checking environment...")
-        sleep(1)
-        try:
-            embed = discord.Embed(title="Error: Missing Required Permissions!",
-                                  description="This bot is lacking required permissions!")
-            embed.add_field(name="You need to grant me the following permission(s):",
-                            value="- Administrator")
-            await ctx.send(content=None, embed=embed)
-        except discord.Forbidden:
-            await ctx.send('''
-__**Error: Missing Required Permission!**__
-**I need the following permission(s) to function properly:**
-- `Administrator`
-''')
-
-        output_log(f'''
-Bad Environment: Insufficient Permissions!
-Server Name: {ctx.guild.name}
-Server ID: {ctx.guild.id}
-Server Owner: {ctx.guild.owner}
-''')
-
+async def customnuke_error(ctx, error): await commanderror(ctx, error)
 
 bot.run(TOKEN)

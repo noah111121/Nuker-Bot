@@ -26,9 +26,68 @@ commandaliases = {
     "customnuke": ["skip"]
 }
 
+twafcorplogo = """                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                    #########                                   
+                               ###################                              
+                          ..########################...                         
+                     .......########################........                    
+                ............########################.............               
+           .................########################..................          
+        ....................########################....................        
+        ....................########################....................        
+        ....................#########################...................        
+        ..................#############################.................        
+        .................###############################................        
+        .................###############################................        
+        ................################################................        
+        .................###############################................        
+        .................###############################................        
+        ..................#############################.................        
+        ....................#########################...................        
+        ....................########################....................        
+        ....................########################....................        
+            ................########################.................           
+                ............########################............                
+                     .......########################.......                     
+                           .########################..                          
+                               ##################/                              
+                                    /########                                   
+                                                                                
+                                                                                
+                                                                                
+#################                                  *            ################
+#################   ###         ##        ###     ###           ################
+       ###           *##       ####      ###       ###          ###             
+       ###             ###   ### ###    ###    #### ####        ############### 
+       ###              ### ###   ###  ###    ####   ,###       ###             
+       ###               #####     ######    ###       ###.     ###             
+       ###                ###       ###*   ####         ####    ###             
+       ###                 #         *    ###             ###   ###             
+                                                                                
+                                                                                
+       .########            ########        ###############    *############    
+     ####      ####      ####.     ####,    ###         ###    *##         ###  
+   ###           ###    ###           ###   ###       ###/     *##         ###  
+   ##                  ###             ##   ###########        *#############   
+   ##*                 ###            ###   ###      ###(      *##              
+    ###          ###    ###          ###    ###        ###     *##              
+     *############        #############     ###         ###*   *##              
+
+"""
+
+def printlineswithdelay(text, delay):
+    for line in text.splitlines():
+        print(line)
+        sleep(delay)
+
 if "settings.json" not in listdir():
+    printlineswithdelay(twafcorplogo, 0.05)
+
     # First time setup
-    print("Performing First Time Setup.\nPlease make sure to enter all values correctly.\nThis will create a \"settings.json\" file.\nIf you wish to restart the first time setup, simply delete the settings.json file.\n")
+    printlineswithdelay("Performing First Time Setup.\nPlease make sure to enter all values correctly.\nThis will create a \"settings.json\" file.\nIf you wish to restart the first time setup, simply delete the settings.json file.\n\n", 0.05)
 
     # Main Variables
     TOKEN = input("Please input your bot's token and press enter to continue: ")
@@ -58,7 +117,10 @@ if "settings.json" not in listdir():
     #VERSIONMESSAGE
     VERSIONMESSAGE = True
 
-    towrite = dumps({"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE, "SHOWCONNECTEDSERVERS": SHOWCONNECTEDSERVERS, "VERSIONMESSAGE": VERSIONMESSAGE, "NUCLEARBUNKERS": NUCLEARBUNKERS, "ROLE_IDS": {}, "CUSTOMNUKESETTINGS": {}})
+    #STARTUPLOGO
+    STARTUPLOGO = True
+
+    towrite = dumps({"TOKEN": TOKEN, "USERID": USER_ID, "PREFIX": PREFIX, "STATUS": STATUS, "LOG": LOG, "LOGFILE": LOGFILE, "SHOWCONNECTEDSERVERS": SHOWCONNECTEDSERVERS, "VERSIONMESSAGE": VERSIONMESSAGE, "STARTUPLOGO": STARTUPLOGO, "NUCLEARBUNKERS": NUCLEARBUNKERS, "ROLE_IDS": {}, "CUSTOMNUKESETTINGS": {}})
 
     # Writes settings to file
     file = open("settings.json", "w+")
@@ -82,7 +144,7 @@ else:
         file.close()
 
     # If settings are missing, add them
-    defaultsettingsjson = {"TOKEN": "", "USERID": False, "PREFIX": "!", "STATUS": False, "LOG": True, "LOGFILE": "nuker_bot_log.txt", "VERSIONMESSAGE": True, "NUCLEARBUNKERS": [],"SHOWCONNECTEDSERVERS": True, "ROLE_IDS": {}, "CUSTOMNUKESETTINGS": {}}
+    defaultsettingsjson = {"TOKEN": "", "USERID": False, "PREFIX": "!", "STATUS": False, "LOG": True, "LOGFILE": "nuker_bot_log.txt", "VERSIONMESSAGE": True, "STARTUPLOGO": True, "NUCLEARBUNKERS": [],"SHOWCONNECTEDSERVERS": True, "ROLE_IDS": {}, "CUSTOMNUKESETTINGS": {}}
     keysnotpresent = [i for i in defaultsettingsjson.keys() if i not in settings.keys()]
     if len(keysnotpresent) > 0:
         for key in keysnotpresent: settings[key] = defaultsettingsjson[key]
@@ -100,6 +162,9 @@ else:
     NUCLEARBUNKERS = settings["NUCLEARBUNKERS"]
     SHOWCONNECTEDSERVERS = settings["SHOWCONNECTEDSERVERS"]
     VERSIONMESSAGE = settings["VERSIONMESSAGE"]
+    STARTUPLOGO = settings["STARTUPLOGO"]
+
+    if STARTUPLOGO: printlineswithdelay(twafcorplogo, 0.05)
 
 # Check if there is a later version
 latestversion = get("https://api.github.com/repos/the-waffle-and-fox-corporation/nuker-bot/releases/latest").json()["tag_name"]
@@ -351,10 +416,10 @@ async def on_ready():
             name=ACTIVITY, type=ACTIVITY_TYPE)
         await bot.change_presence(activity=activity)
 
-    print(f"{bot.user} online!\n")
+    print(f"{bot.user} online and ready!\n")
     if SHOWCONNECTEDSERVERS:
         print(f"Connected servers ({len(bot.guilds)}):")
-        for guild in bot.guilds: print(guild.name)
+        printlineswithdelay("\n".join([guild.name for guild in bot.guilds]), 0.05)
         print()
 
     if LOG:

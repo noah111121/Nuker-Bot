@@ -26,6 +26,14 @@ commandaliases = {
     "customnuke": ["skip"]
 }
 
+if "commandaliases.json" in listdir():
+    with open("commandaliases.json") as file:
+        commandaliasestoadd = loads(file.read())
+        file.close()
+    
+    for maincommand in commandaliasestoadd.keys():
+        commandaliases[maincommand] = list(set(commandaliases[maincommand]+commandaliasestoadd[maincommand]))
+
 twafcorplogo = """                                                                                
                                                                                 
                                                                                 

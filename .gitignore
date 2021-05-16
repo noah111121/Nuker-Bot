@@ -7,7 +7,7 @@ __pycache__/
 # Ignore Temp Icon
 .tmp_icon
 
-# Ignore settings.json files
+# Ignore settings.json file
 settings.json
 
 # Ignore the build stuff and old directory
@@ -23,3 +23,6 @@ old/
 
 # Ignore the executables directory Fox has
 executables/
+
+# Ignore commandaliases.json file
+commandaliases.json

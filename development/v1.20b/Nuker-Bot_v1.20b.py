@@ -183,7 +183,7 @@ if STATUS is not False:
     usestatus = True
     split = STATUS.index(",")
     ACTIVITY_TYPE = STATUS[0:split]
-    ACTIVITY = STATUS[split+1:-1]
+    ACTIVITY = STATUS[split+1:]
 
     if ACTIVITY_TYPE == "playing":
         ACTIVITY_TYPE = discord.ActivityType.playing

@@ -95,7 +95,7 @@ if "settings.json" not in listdir():
     printlineswithdelay(twafcorplogo, 0.05)
 
     # First time setup
-    printlineswithdelay("Performing First Time Setup.\nPlease make sure to enter all values correctly.\nThis will create a \"settings.json\" file.\nIf you wish to restart the first time setup, simply delete the settings.json file.\n\n", 0.05)
+    printlineswithdelay("Performing First Time Setup.\nPlease make sure to enter all values correctly.\nThis will create a \"settings.json\" file.\nIf you wish to restart the first time setup, simply delete the \"settings.json\" file.\n\n", 0.05)
 
     # Main Variables
     TOKEN = input("Please input your bot's token and press enter to continue: ")

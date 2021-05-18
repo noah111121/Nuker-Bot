@@ -7,7 +7,7 @@ from discord.ext import commands
 
 from requests import get
 from datetime import datetime
-from os import listdir
+from os import listdir, remove
 from time import sleep
 from typing import Optional
 from json import loads, dumps
@@ -369,6 +369,8 @@ async def edit_server(ctx, name, icon_file):
     with open(icon_file, "rb") as f:
         icon = f.read()
         f.close()
+    
+    remove(".tmp_icon")
 
     try:
         await ctx.guild.edit(name=name, icon=icon)

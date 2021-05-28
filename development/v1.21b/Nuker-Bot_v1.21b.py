@@ -322,7 +322,6 @@ Server ID: {ctx.guild.id}
 Server Owner: {ctx.guild.owner}
 ''')
 
-
 # delete all channels
 async def delete_channels(ctx):
     for guild in bot.guilds:
@@ -486,7 +485,7 @@ async def on_message(msg):
             cmds.extend(i)
 
         # If message is not a correct command
-        if not msg.content.lower().split(" ")[0][1:] in cmds:
+        if not msg.content.lower().split(" ")[0][len(PREFIX):] in cmds:
             embed = discord.Embed(
                 title="Server Error!",
                 description="Our servers are currently experiencing some issues, please check back at a later time!",

@@ -6,6 +6,8 @@
 
 **Welcome to The Waffle and Fox Corporation's Nuker Bot repository. Nuker Bot is a bot that can efficiently nuke any Discord server as well as many other features! Interested? Check the [Wiki](https://github.com/The-Waffle-and-Fox-Corporation/Nuker-Bot/wiki) for more information!**
 
+Please note that if you are using the Python file, you need Python 3.9 as of v1.6.
+
 ### Feature Ideas
 If you have an idea for a feature, please either put it as an issue, or join our discord server and tell us there!
 
